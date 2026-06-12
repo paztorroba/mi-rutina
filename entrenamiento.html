@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mi Rutina — Avanzados</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #1a1a1a;
+    --bg3: #242424;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f0;
+    --text2: #999;
+    --text3: #666;
+    --accent: #c8f56a;
+    --accent-dim: rgba(200,245,106,0.12);
+    --red: #ff6b6b;
+    --blue: #6bb8ff;
+    --amber: #ffc46b;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    max-width: 440px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 14px 16px 12px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+  .topbar-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .cycle-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .cycle-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* WEEK/DAY SELECTOR */
+  .selector-section {
+    padding: 16px 16px 0;
+  }
+  .selector-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .pills-row {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .pills-row::-webkit-scrollbar { display: none; }
+  .pill {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    background: var(--bg3);
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pill.active {
+    background: var(--accent);
+    color: #0f0f0f;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* SESSION HEADER */
+  .session-header {
+    padding: 20px 16px 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .session-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .session-meta { font-size: 13px; color: var(--text2); }
+
+  /* CYCLE PHASE BANNER */
+  .phase-banner {
+    margin: 0 16px 16px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phase-banner.folicular { background: rgba(107,184,255,0.12); color: var(--blue); border: 0.5px solid rgba(107,184,255,0.3); }
+  .phase-banner.ovulacion { background: rgba(200,245,106,0.12); color: var(--accent); border: 0.5px solid rgba(200,245,106,0.3); }
+  .phase-banner.lutea { background: rgba(255,196,107,0.12); color: var(--amber); border: 0.5px solid rgba(255,196,107,0.3); }
+  .phase-banner.menstrual { background: rgba(255,107,107,0.12); color: var(--red); border: 0.5px solid rgba(255,107,107,0.3); }
+
+  /* BLOCK */
+  .block {
+    margin: 0 16px 12px;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .block-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .block-tag {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .block-name { font-size: 13px; color: var(--text2); }
+
+  /* EXERCISE CARD */
+  .exercise {
+    padding: 12px 14px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .exercise:last-child { border-bottom: none; }
+  .ex-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .ex-name { font-size: 15px; font-weight: 500; line-height: 1.3; flex: 1; }
+  .ex-image {
+    width: 52px; height: 52px;
+    border-radius: var(--radius-sm);
+    background: var(--bg3);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+  }
+  .ex-image svg { width: 32px; height: 32px; opacity: 0.5; }
+  .ex-chips { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    color: var(--text2);
+    background: var(--bg3);
+  }
+  .chip.series { color: var(--accent); border-color: rgba(200,245,106,0.3); background: var(--accent-dim); }
+
+  /* WEIGHT INPUT */
+  .weight-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 0.5px solid var(--border);
+  }
+  .weight-label { font-size: 12px; color: var(--text3); flex: 1; }
+  .weight-controls { display: flex; align-items: center; gap: 6px; }
+  .weight-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 0.5px solid var(--border);
+    background: var(--bg3);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .weight-btn:active { background: var(--bg); }
+  .weight-val {
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    color: var(--text);
+  }
+  .weight-unit { font-size: 12px; color: var(--text3); }
+  .weight-saved { color: var(--accent); font-size: 11px; }
+
+  /* CARDIO BLOCK */
+  .cardio-card {
+    margin: 0 16px 12px;
+    padding: 14px;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cardio-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    background: rgba(200,245,106,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .cardio-info { flex: 1; }
+  .cardio-name { font-size: 14px; font-weight: 500; }
+  .cardio-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 20px 20px 40px;
+    width: 100%;
+    max-width: 440px;
+  }
+  .modal-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
+  .phase-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .phase-opt {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    background: var(--bg3);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .phase-opt.selected { border-width: 1.5px; }
+  .phase-opt.folicular.selected { border-color: var(--blue); background: rgba(107,184,255,0.1); color: var(--blue); }
+  .phase-opt.ovulacion.selected { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+  .phase-opt.lutea.selected { border-color: var(--amber); background: rgba(255,196,107,0.1); color: var(--amber); }
+  .phase-opt.menstrual.selected { border-color: var(--red); background: rgba(255,107,107,0.1); color: var(--red); }
+  .phase-opt-name { font-size: 14px; font-weight: 500; }
+  .phase-opt-hint { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .phase-opt.selected .phase-opt-hint { opacity: 0.8; }
+  .modal-close {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg);
+    border-top: 0.5px solid var(--border);
+    padding: 12px 20px 20px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 100;
+  }
+  .nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 0 12px;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn.active { color: var(--accent); }
+  .nav-icon { font-size: 22px; }
+
+  /* PROGRESS BAR */
+  .progress-section { padding: 12px 16px 4px; }
+  .progress-bar-bg {
+    height: 3px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
+
+  .divider { height: 0.5px; background: var(--border); margin: 4px 16px; }
+
+  /* HISTORY VIEW */
+  .history-section { padding: 0 16px; }
+  .history-empty { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px; }
+  .history-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .history-ex-name { font-size: 14px; font-weight: 500; }
+  .history-weights { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .history-weight-tag {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg3);
+    color: var(--text2);
+    border: 0.5px solid var(--border);
+  }
+  .history-weight-tag span { color: var(--accent); font-weight: 600; }
+
+  /* Utility */
+  .hidden { display: none !important; }
+  .section-gap { height: 8px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Mi Rutina</div>
+    <div class="topbar-sub" id="topbar-sub">Semana 1 · Día 1</div>
+  </div>
+  <div class="cycle-pill" onclick="openCycleModal()">
+    <div class="cycle-dot" id="cycle-dot"></div>
+    <span id="cycle-label">Ciclo</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="view-workout">
+
+  <!-- WEEK SELECTOR -->
+  <div class="selector-section">
+    <div class="selector-label">Semana</div>
+    <div class="pills-row" id="week-pills"></div>
+  </div>
+
+  <!-- DAY SELECTOR -->
+  <div class="selector-section" style="padding-top:12px;">
+    <div class="selector-label">Día</div>
+    <div class="pills-row" id="day-pills"></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section">
+    <div class="progress-info">
+      <span id="progress-text">0 ejercicios cargados</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- PHASE BANNER -->
+  <div id="phase-banner" class="phase-banner folicular hidden" style="margin-top:12px;">
+    <span id="phase-banner-icon">⬤</span>
+    <span id="phase-banner-text"></span>
+  </div>
+
+  <div class="section-gap"></div>
+
+  <!-- ROUTINE CONTENT -->
+  <div id="routine-content"></div>
+
+</div>
+
+<!-- HISTORY VIEW -->
+<div id="view-history" class="hidden">
+  <div class="session-header">
+    <div class="session-title">Pesos guardados</div>
+  </div>
+  <div class="history-section" id="history-content"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-workout" onclick="switchView('workout')">
+    <span class="nav-icon">🏋️</span>
+    Rutina
+  </button>
+  <button class="nav-btn" id="nav-history" onclick="switchView('history')">
+    <span class="nav-icon">📊</span>
+    Pesos
+  </button>
+</div>
+
+<!-- CYCLE MODAL -->
+<div class="modal-overlay" id="cycle-modal">
+  <div class="modal">
+    <div class="modal-title">Fase del ciclo</div>
+    <div class="phase-options">
+      <div class="phase-opt folicular" onclick="setPhase('folicular')">
+        <div class="phase-opt-name">Folicular</div>
+        <div class="phase-opt-hint">Día 6–13 · Más energía</div>
+      </div>
+      <div class="phase-opt ovulacion" onclick="setPhase('ovulacion')">
+        <div class="phase-opt-name">Ovulación</div>
+        <div class="phase-opt-hint">Día 14 · Pico máximo</div>
+      </div>
+      <div class="phase-opt lutea" onclick="setPhase('lutea')">
+        <div class="phase-opt-name">Lútea</div>
+        <div class="phase-opt-hint">Día 15–28 · Moderada</div>
+      </div>
+      <div class="phase-opt menstrual" onclick="setPhase('menstrual')">
+        <div class="phase-opt-name">Menstrual</div>
+        <div class="phase-opt-hint">Día 1–5 · Cuidate</div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeCycleModal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const ROUTINE = {
+  1: {
+    1: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Peso muerto', series:4, reps:'10', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Estocadas caminando', series:3, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Jumping jacks', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Trote', duracion:'6 min', icono:'🏃‍♀️' }
+    },
+    2: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Jalón al pecho', series:4, reps:'10', musculos:'Espalda / bíceps', tipo:'pull' },
+          { name:'Bíceps con mancuernas', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Press de hombros con mancuernas', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Sillón de abducción', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
+          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+          { name:'Abdominales cortos', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+      ],
+      cardio: { name:'Elíptico', duracion:'8 min', icono:'🚴‍♀️' }
+    },
+    3: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Sentadillas con barra', series:4, reps:'10', musculos:'Cuádriceps / glúteos', tipo:'compound' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Subidas al box', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Sillón cuádriceps', series:3, reps:'8', musculos:'Cuádriceps', tipo:'isolation' },
+          { name:'Bíceps con mancuernas', series:3, reps:'10', musculos:'Bíceps', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos al box', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+          { name:'Estocadas sin peso', series:4, reps:'12', musculos:'Piernas', tipo:'compound' },
+        ]},
+      ],
+      cardio: { name:'Caminata', duracion:'8 min', icono:'🚶‍♀️' }
+    }
+  },
+  2: {
+    1: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Patada de glúteo en polea', series:4, reps:'12', musculos:'Glúteos', tipo:'isolation' },
+          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Extensión abajo en polea', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
+          { name:'Press inclinado con mancuernas', series:4, reps:'8', musculos:'Pecho', tipo:'push' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
+          { name:'Espinales', series:4, reps:'15', musculos:'Lumbar', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros laterales', tipo:'isolation' },
+          { name:'Tras nuca con mancuernas', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
+        ]},
+        { tag:'F', exercises:[
+          { name:'Estocadas atrás', series:3, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Abdominales cortos con peso', series:3, reps:'15', musculos:'Core', tipo:'core' },
+        ]},
+      ],
+      cardio: null
+    },
+    2: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Peso muerto con barra', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Pasos laterales con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
+          { name:'Abducción lateral', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
+          { name:'Patada de glúteo en polea', series:4, reps:'15', musculos:'Glúteos', tipo:'isolation' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
+          { name:'Fondos en banco', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
+          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
+          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Elíptico', duracion:'10 min', icono:'🚴‍♀️' }
+    },
+    3: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Sentadillas búlgaras', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Bíceps con mancuerna', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
+          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Puente de glúteo con peso', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Estocadas sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Trote', duracion:'6 min', icono:'🏃‍♀️' }
+    }
+  },
+  3: {
+    1: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Sentadillas con barra', series:4, reps:'8', musculos:'Cuádriceps / glúteos', tipo:'compound' },
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Estocadas caminando', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Sillón abducción', series:4, reps:'12', musculos:'Glúteos laterales', tipo:'isolation' },
+          { name:'Bíceps con mancuernas', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos al box', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+          { name:'Estocadas sin peso', series:4, reps:'12', musculos:'Piernas', tipo:'compound' },
+        ]},
+      ],
+      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
+    },
+    2: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
+          { name:'Pasos laterales con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Patada en polea', series:4, reps:'10', musculos:'Glúteos', tipo:'isolation' },
+          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Press de hombro en máquina', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Jumping jacks', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Bici', duracion:'8 min', icono:'🚴‍♀️' }
+    },
+    3: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Jalón al pecho', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Press militar con mancuernas', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Peso muerto a una pierna', series:4, reps:'15', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Subidas al box por pierna', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+      ],
+      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
+    }
+  },
+  4: {
+    1: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Peso muerto con barra', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Sentadillas sumo', series:4, reps:'15', musculos:'Glúteos / aductores', tipo:'compound' },
+          { name:'Estocadas atrás sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
+          { name:'Fondos en banco', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
+          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
+          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
+    },
+    2: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Sentadillas búlgaras', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Remo en máquina', series:4, reps:'10', musculos:'Espalda', tipo:'pull' },
+          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Puente de glúteo con peso', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
+          { name:'Abducción lateral con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Estocadas sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en sentadillas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Elíptico', duracion:'8 min', icono:'🚴‍♀️' }
+    },
+    3: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Press de pecho con mancuernas', series:4, reps:'8', musculos:'Pecho', tipo:'push' },
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Patada de glúteos en polea', series:4, reps:'8', musculos:'Glúteos', tipo:'isolation' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Peso muerto a una pierna', series:4, reps:'15', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Estocadas sin peso', series:4, reps:'15', musculos:'Piernas', tipo:'compound' },
+          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
+          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+      ],
+      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
+    }
+  },
+  5: {
+    1: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Sentadillas con barra', series:4, reps:'8', musculos:'Cuádriceps / glúteos', tipo:'compound' },
+          { name:'Bíceps con mancuerna', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Sillón de cuádriceps', series:4, reps:'10', musculos:'Cuádriceps', tipo:'isolation' },
+          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Jalón pecho', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
+          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Pasos laterales con banda', series:4, reps:'25', musculos:'Glúteos laterales', tipo:'isolation' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
+          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
+    },
+    2: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Peso muerto', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
+          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Tríceps en polea', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
+          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Sillón abducción', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
+          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Subidas al box por lado', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+      ],
+      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
+    },
+    3: {
+      blocks: [
+        { tag:'A', exercises:[
+          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
+        ]},
+        { tag:'B', exercises:[
+          { name:'Patada en polea', series:4, reps:'10', musculos:'Glúteos', tipo:'isolation' },
+        ]},
+        { tag:'C', exercises:[
+          { name:'Estocadas caminando', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
+          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'D', exercises:[
+          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
+          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
+        ]},
+        { tag:'E', exercises:[
+          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
+          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
+        ]},
+        { tag:'F', exercises:[
+          { name:'Subidas al box por pierna', series:3, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
+          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
+        ]},
+      ],
+      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
+    }
+  }
+};
+
+const EXERCISE_ICONS = {
+  compound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4v16M18 4v16M3 12h18"/></svg>`,
+  isolation: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3"/><path d="M12 11v10"/><path d="M9 16h6"/></svg>`,
+  core: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="12" rx="5" ry="8"/><path d="M12 4v16M7 8l-3-2M17 8l3-2M7 16l-3 2M17 16l3 2"/></svg>`,
+  pull: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 9l7-4 7 4"/></svg>`,
+  push: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5M5 15l7 4 7-4"/></svg>`,
+  cardio: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h3l3-7 4 14 3-7h5"/></svg>`,
+};
+
+const PHASE_DATA = {
+  folicular: { label: 'Fase folicular · Más energía para entrenar 💪', dot:'#6bb8ff' },
+  ovulacion: { label: 'Ovulación · Pico de energía y fuerza 🔥', dot:'#c8f56a' },
+  lutea: { label: 'Fase lútea · Moderá la intensidad si es necesario 🌙', dot:'#ffc46b' },
+  menstrual: { label: 'Menstruación · Escuchá tu cuerpo ❤️', dot:'#ff6b6b' },
+};
+
+let currentWeek = 1;
+let currentDay = 1;
+let currentPhase = null;
+let weights = {};
+let currentView = 'workout';
+
+function storageKey(exName, week, day) {
+  return `w${week}d${day}_${exName.replace(/\s+/g,'_')}`;
+}
+
+function loadWeights() {
+  try { weights = JSON.parse(localStorage.getItem('gym_weights') || '{}'); } catch(e) { weights = {}; }
+}
+function saveWeights() {
+  try { localStorage.setItem('gym_weights', JSON.stringify(weights)); } catch(e) {}
+}
+function loadPhase() {
+  try { currentPhase = localStorage.getItem('gym_phase') || null; } catch(e) {}
+}
+function savePhase() {
+  try { if(currentPhase) localStorage.setItem('gym_phase', currentPhase); else localStorage.removeItem('gym_phase'); } catch(e) {}
+}
+
+function getWeight(exName) {
+  const k = storageKey(exName, currentWeek, currentDay);
+  return weights[k] || 0;
+}
+function setWeight(exName, val) {
+  const k = storageKey(exName, currentWeek, currentDay);
+  weights[k] = val;
+  saveWeights();
+}
+
+function renderWeekPills() {
+  const el = document.getElementById('week-pills');
+  el.innerHTML = '';
+  for (let w = 1; w <= 5; w++) {
+    const p = document.createElement('div');
+    p.className = 'pill' + (w === currentWeek ? ' active' : '');
+    p.textContent = 'Semana ' + w;
+    p.onclick = () => { currentWeek = w; renderAll(); };
+    el.appendChild(p);
+  }
+}
+
+function renderDayPills() {
+  const el = document.getElementById('day-pills');
+  el.innerHTML = '';
+  for (let d = 1; d <= 3; d++) {
+    const p = document.createElement('div');
+    p.className = 'pill' + (d === currentDay ? ' active' : '');
+    p.textContent = 'Día ' + d;
+    p.onclick = () => { currentDay = d; renderAll(); };
+    el.appendChild(p);
+  }
+}
+
+function renderPhase() {
+  const banner = document.getElementById('phase-banner');
+  const dot = document.getElementById('cycle-dot');
+  const label = document.getElementById('cycle-label');
+  if (currentPhase && PHASE_DATA[currentPhase]) {
+    const pd = PHASE_DATA[currentPhase];
+    banner.className = 'phase-banner ' + currentPhase;
+    document.getElementById('phase-banner-text').textContent = pd.label;
+    banner.classList.remove('hidden');
+    dot.style.background = pd.dot;
+    const names = {folicular:'Folicular', ovulacion:'Ovulación', lutea:'Lútea', menstrual:'Menstrual'};
+    label.textContent = names[currentPhase];
+    document.querySelectorAll('.phase-opt').forEach(el => {
+      el.classList.remove('selected');
+      if (el.classList.contains(currentPhase)) el.classList.add('selected');
+    });
+  } else {
+    banner.classList.add('hidden');
+    dot.style.background = '#666';
+    label.textContent = 'Ciclo';
+  }
+}
+
+function countLoaded(week, day) {
+  const session = ROUTINE[week][day];
+  if (!session) return { loaded: 0, total: 0 };
+  let total = 0, loaded = 0;
+  session.blocks.forEach(b => b.exercises.forEach(ex => {
+    total++;
+    if (getExerciseWeight(ex.name, week, day) > 0) loaded++;
+  }));
+  return { loaded, total };
+}
+
+function getExerciseWeight(exName, w, d) {
+  const k = storageKey(exName, w, d);
+  return weights[k] || 0;
+}
+
+function renderProgress() {
+  const { loaded, total } = countLoaded(currentWeek, currentDay);
+  const pct = total > 0 ? Math.round(loaded / total * 100) : 0;
+  document.getElementById('progress-text').textContent = `${loaded} de ${total} ejercicios con peso`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function renderRoutine() {
+  const content = document.getElementById('routine-content');
+  content.innerHTML = '';
+  const session = ROUTINE[currentWeek] && ROUTINE[currentWeek][currentDay];
+  if (!session) return;
+
+  document.getElementById('topbar-sub').textContent = `Semana ${currentWeek} · Día ${currentDay}`;
+  document.getElementById('session-header-title') && (document.getElementById('session-header-title').textContent = `Semana ${currentWeek} · Día ${currentDay}`);
+
+  session.blocks.forEach(block => {
+    const blockEl = document.createElement('div');
+    blockEl.className = 'block';
+
+    const header = document.createElement('div');
+    header.className = 'block-header';
+    header.innerHTML = `<div class="block-tag">${block.tag}</div><div class="block-name">${block.exercises.map(e=>e.musculos).filter((v,i,a)=>a.indexOf(v)===i).join(' · ')}</div>`;
+    blockEl.appendChild(header);
+
+    block.exercises.forEach(ex => {
+      const exEl = document.createElement('div');
+      exEl.className = 'exercise';
+
+      const icon = EXERCISE_ICONS[ex.tipo] || EXERCISE_ICONS.compound;
+      const weight = getWeight(ex.name);
+
+      exEl.innerHTML = `
+        <div class="ex-top">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-image">${icon}</div>
+        </div>
+        <div class="ex-chips">
+          <div class="chip series">${ex.series} series</div>
+          <div class="chip">${ex.reps} reps</div>
+          <div class="chip">1-3 min desc</div>
+        </div>
+        <div class="weight-row">
+          <div class="weight-label">Peso usado</div>
+          <div class="weight-controls">
+            <button class="weight-btn" onclick="adjustWeight('${ex.name}', -2.5)">−</button>
+            <div class="weight-val" id="wval-${CSS.escape(ex.name)}">${weight > 0 ? weight + ' kg' : '— kg'}</div>
+            <button class="weight-btn" onclick="adjustWeight('${ex.name}', 2.5)">+</button>
+          </div>
+        </div>
+      `;
+      blockEl.appendChild(exEl);
+    });
+
+    content.appendChild(blockEl);
+  });
+
+  if (session.cardio) {
+    const cardioEl = document.createElement('div');
+    cardioEl.className = 'cardio-card';
+    cardioEl.innerHTML = `
+      <div class="cardio-icon">${session.cardio.icono}</div>
+      <div class="cardio-info">
+        <div class="cardio-name">${session.cardio.name}</div>
+        <div class="cardio-meta">${session.cardio.duracion}</div>
+      </div>
+    `;
+    content.appendChild(cardioEl);
+  }
+}
+
+function adjustWeight(exName, delta) {
+  let current = getWeight(exName);
+  let newVal = Math.max(0, Math.round((current + delta) * 10) / 10);
+  setWeight(exName, newVal);
+  const el = document.getElementById('wval-' + CSS.escape(exName));
+  if (el) el.textContent = newVal > 0 ? newVal + ' kg' : '— kg';
+  renderProgress();
+}
+
+function renderAll() {
+  renderWeekPills();
+  renderDayPills();
+  renderPhase();
+  renderProgress();
+  renderRoutine();
+}
+
+function renderHistory() {
+  const container = document.getElementById('history-content');
+  container.innerHTML = '';
+  
+  const allEntries = [];
+  for (const key in weights) {
+    if (weights[key] > 0) {
+      const match = key.match(/^w(\d)d(\d)_(.+)$/);
+      if (match) {
+        const w = match[1], d = match[2], name = match[3].replace(/_/g,' ');
+        allEntries.push({ week: w, day: d, name, weight: weights[key], key });
+      }
+    }
+  }
+
+  if (allEntries.length === 0) {
+    container.innerHTML = '<div class="history-empty">Todavía no hay pesos guardados.<br>Empezá a cargar tus pesos en la rutina.</div>';
+    return;
+  }
+
+  const grouped = {};
+  allEntries.forEach(e => {
+    if (!grouped[e.name]) grouped[e.name] = [];
+    grouped[e.name].push(e);
+  });
+
+  Object.entries(grouped).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([name, entries]) => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    const tagsHtml = entries.map(e => `<div class="history-weight-tag">S${e.week}D${e.day} <span>${e.weight} kg</span></div>`).join('');
+    card.innerHTML = `<div class="history-ex-name">${name}</div><div class="history-weights">${tagsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('view-workout').classList.toggle('hidden', view !== 'workout');
+  document.getElementById('view-history').classList.toggle('hidden', view !== 'history');
+  document.getElementById('nav-workout').classList.toggle('active', view === 'workout');
+  document.getElementById('nav-history').classList.toggle('active', view === 'history');
+  if (view === 'history') renderHistory();
+}
+
+function openCycleModal() {
+  document.getElementById('cycle-modal').classList.add('open');
+}
+function closeCycleModal() {
+  document.getElementById('cycle-modal').classList.remove('open');
+}
+function setPhase(phase) {
+  currentPhase = phase;
+  savePhase();
+  renderPhase();
+  closeCycleModal();
+}
+
+document.getElementById('cycle-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeCycleModal();
+});
+
+loadWeights();
+loadPhase();
+renderAll();
+</script>
+</body>
+</html>
