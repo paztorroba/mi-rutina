@@ -3,436 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mi Rutina — Avanzados</title>
+<title>Mi Rutina</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #0f0f0f;
-    --bg2: #1a1a1a;
-    --bg3: #242424;
-    --border: rgba(255,255,255,0.1);
-    --text: #f0f0f0;
-    --text2: #999;
-    --text3: #666;
-    --accent: #c8f56a;
-    --accent-dim: rgba(200,245,106,0.12);
-    --red: #ff6b6b;
-    --blue: #6bb8ff;
-    --amber: #ffc46b;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    max-width: 440px;
-    margin: 0 auto;
-    padding-bottom: 80px;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f0;--bg2:#ffffff;--bg3:#f0f0eb;--bg4:#e8e8e3;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --text:#1a1a1a;--text2:#666;--text3:#999;
+  --accent:#7cb518;--accent-bg:rgba(124,181,24,0.1);--accent-dark:#5a8a0e;
+  --red:#e05252;--blue:#4a90d9;--amber:#d4860a;--green:#4caf7d;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --radius:14px;--radius-sm:10px;--radius-xs:7px;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;padding-bottom:90px}
 
-  /* TOP BAR */
-  .topbar {
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    border-bottom: 0.5px solid var(--border);
-    padding: 14px 16px 12px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .topbar-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
-  .topbar-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .cycle-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 12px;
-    color: var(--text2);
-    white-space: nowrap;
-  }
-  .cycle-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
+/* TOPBAR */
+.topbar{position:sticky;top:0;background:rgba(245,245,240,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:14px 16px 12px;z-index:100;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-size:17px;font-weight:700;letter-spacing:-0.4px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+#sync-status{font-size:11px;color:var(--text3)}
+.cycle-pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:6px 11px;cursor:pointer;font-size:12px;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow)}
+.cycle-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
-  /* WEEK/DAY SELECTOR */
-  .selector-section {
-    padding: 16px 16px 0;
-  }
-  .selector-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .pills-row {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .pills-row::-webkit-scrollbar { display: none; }
-  .pill {
-    flex-shrink: 0;
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 0.5px solid var(--border);
-    background: var(--bg3);
-    font-size: 13px;
-    color: var(--text2);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .pill.active {
-    background: var(--accent);
-    color: #0f0f0f;
-    border-color: var(--accent);
-    font-weight: 600;
-  }
+/* COLLAPSIBLE SELECTOR */
+.selector-wrap{margin:12px 16px 0}
+.selector-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.selector-toggle-left{display:flex;align-items:center;gap:8px}
+.selector-toggle-label{font-size:13px;font-weight:600;color:var(--text)}
+.selector-toggle-sub{font-size:12px;color:var(--text2)}
+.selector-toggle-arrow{font-size:12px;color:var(--text3);transition:transform 0.2s}
+.selector-toggle-arrow.open{transform:rotate(180deg)}
+.selector-body{display:none;padding:10px 0 0}
+.selector-body.open{display:block}
+.selector-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.selector-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;margin-bottom:6px;grid-column:1/-1}
+.session-item{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+.session-item.selected{border-color:var(--accent);background:var(--accent-bg)}
+.session-item-label{font-size:13px;font-weight:500;color:var(--text)}
+.session-item.selected .session-item-label{color:var(--accent-dark)}
+.session-checkbox{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg3);transition:all 0.15s}
+.session-item.done-session .session-checkbox{background:var(--green);border-color:var(--green)}
+.session-item.done-session .session-item-label{color:var(--text3);text-decoration:line-through}
 
-  /* SESSION HEADER */
-  .session-header {
-    padding: 20px 16px 12px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-  .session-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-  .session-meta { font-size: 13px; color: var(--text2); }
+/* PROGRESS */
+.progress-section{padding:10px 16px 0}
+.progress-card{background:var(--bg2);border-radius:var(--radius);padding:11px 13px;box-shadow:var(--shadow);border:0.5px solid var(--border)}
+.progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.progress-label{font-size:13px;color:var(--text2)}
+.progress-pct{font-size:13px;font-weight:600;color:var(--accent)}
+.progress-bar-bg{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.4s ease}
 
-  /* CYCLE PHASE BANNER */
-  .phase-banner {
-    margin: 0 16px 16px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .phase-banner.folicular { background: rgba(107,184,255,0.12); color: var(--blue); border: 0.5px solid rgba(107,184,255,0.3); }
-  .phase-banner.ovulacion { background: rgba(200,245,106,0.12); color: var(--accent); border: 0.5px solid rgba(200,245,106,0.3); }
-  .phase-banner.lutea { background: rgba(255,196,107,0.12); color: var(--amber); border: 0.5px solid rgba(255,196,107,0.3); }
-  .phase-banner.menstrual { background: rgba(255,107,107,0.12); color: var(--red); border: 0.5px solid rgba(255,107,107,0.3); }
+/* PHASE BANNER */
+.phase-banner{margin:10px 16px 0;padding:10px 13px;border-radius:var(--radius-sm);font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow)}
+.phase-banner.folicular{background:#e8f4fd;color:#2a6fa8;border:0.5px solid #b8d9f5}
+.phase-banner.ovulacion{background:#f0f8e0;color:#4a7a10;border:0.5px solid #c5e08a}
+.phase-banner.lutea{background:#fef6e6;color:#9a6200;border:0.5px solid #f5d68a}
+.phase-banner.menstrual{background:#fdeaea;color:#b03030;border:0.5px solid #f5b8b8}
 
-  /* BLOCK */
-  .block {
-    margin: 0 16px 12px;
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .block-header {
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .block-tag {
-    width: 24px; height: 24px;
-    border-radius: 6px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .block-name { font-size: 13px; color: var(--text2); }
+/* EXERCISES LIST (no blocks) */
+.section-gap{height:10px}
+.exercises-list{margin:0 16px}
+.exercise{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px;box-shadow:var(--shadow);transition:opacity 0.2s}
+.exercise.done{opacity:0.38;background:var(--bg3)}
+.exercise.done .ex-name{text-decoration:line-through;color:var(--text3)}
 
-  /* EXERCISE CARD */
-  .exercise {
-    padding: 12px 14px;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .exercise:last-child { border-bottom: none; }
-  .ex-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-  .ex-name { font-size: 15px; font-weight: 500; line-height: 1.3; flex: 1; }
-  .ex-image {
-    width: 52px; height: 52px;
-    border-radius: var(--radius-sm);
-    background: var(--bg3);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    border: 0.5px solid var(--border);
-  }
-  .ex-image svg { width: 32px; height: 32px; opacity: 0.5; }
-  .ex-chips { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-  .chip {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 0.5px solid var(--border);
-    color: var(--text2);
-    background: var(--bg3);
-  }
-  .chip.series { color: var(--accent); border-color: rgba(200,245,106,0.3); background: var(--accent-dim); }
+.ex-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.check-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+.check-btn.checked{background:var(--green);border-color:var(--green)}
+.check-btn svg{width:13px;height:13px}
+.ex-name{font-size:14px;font-weight:600;line-height:1.3;flex:1;color:var(--text)}
 
-  /* WEIGHT INPUT */
-  .weight-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 0.5px solid var(--border);
-  }
-  .weight-label { font-size: 12px; color: var(--text3); flex: 1; }
-  .weight-controls { display: flex; align-items: center; gap: 6px; }
-  .weight-btn {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    border: 0.5px solid var(--border);
-    background: var(--bg3);
-    color: var(--text);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .weight-btn:active { background: var(--bg); }
-  .weight-val {
-    font-size: 15px;
-    font-weight: 600;
-    min-width: 60px;
-    text-align: center;
-    color: var(--text);
-  }
-  .weight-unit { font-size: 12px; color: var(--text3); }
-  .weight-saved { color: var(--accent); font-size: 11px; }
+/* CHIP GROUPS */
+.chips-group-1{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.chips-group-2{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;align-items:center}
+.chip{font-size:11px;padding:3px 8px;border-radius:20px;border:0.5px solid var(--border2);color:var(--text2);background:var(--bg3);font-weight:400}
+.chip.reps{font-size:12px;font-weight:700;color:var(--text);background:var(--bg4);border-color:var(--border2);padding:4px 10px}
+.chip.series{color:var(--accent-dark);border-color:rgba(124,181,24,0.4);background:var(--accent-bg);font-weight:500}
+.chip.tag-zona{color:#2a6fa8;background:#e8f4fd;border-color:#b8d9f5}
+.chip.tag-tipo-a{color:#c06000;background:#fff0e0;border-color:#ffd0a0}
+.chip.tag-tipo-an{color:#4a7a10;background:#f0f8e0;border-color:#c5e08a}
+.chip.tag-lugar{font-size:11px;font-weight:600;padding:3px 9px;color:#fff;border:none;white-space:nowrap}
+.chip.tag-lugar-piso{background:#8a8a8a}
+.chip.tag-lugar-maquina{background:var(--accent-dark)}
 
-  /* CARDIO BLOCK */
-  .cardio-card {
-    margin: 0 16px 12px;
-    padding: 14px;
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .cardio-icon {
-    width: 40px; height: 40px;
-    border-radius: var(--radius-sm);
-    background: rgba(200,245,106,0.08);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .cardio-info { flex: 1; }
-  .cardio-name { font-size: 14px; font-weight: 500; }
-  .cardio-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+/* WEIGHT */
+.weight-row{display:flex;align-items:center;gap:7px;padding-top:9px;border-top:0.5px solid var(--border)}
+.weight-label{font-size:12px;color:var(--text3);flex:1}
+.weight-controls{display:flex;align-items:center;gap:5px}
+.weight-btn{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.weight-btn:active{background:var(--bg4)}
+.weight-input{width:68px;height:30px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-xs);color:var(--text);font-size:14px;font-weight:600;text-align:center;-webkit-appearance:none;appearance:none;outline:none}
+.weight-input:focus{border-color:var(--accent);background:var(--bg2)}
+.weight-unit{font-size:12px;color:var(--text3)}
 
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius) var(--radius) 0 0;
-    padding: 20px 20px 40px;
-    width: 100%;
-    max-width: 440px;
-  }
-  .modal-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
-  .phase-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .phase-opt {
-    padding: 14px;
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border);
-    background: var(--bg3);
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-  }
-  .phase-opt.selected { border-width: 1.5px; }
-  .phase-opt.folicular.selected { border-color: var(--blue); background: rgba(107,184,255,0.1); color: var(--blue); }
-  .phase-opt.ovulacion.selected { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
-  .phase-opt.lutea.selected { border-color: var(--amber); background: rgba(255,196,107,0.1); color: var(--amber); }
-  .phase-opt.menstrual.selected { border-color: var(--red); background: rgba(255,107,107,0.1); color: var(--red); }
-  .phase-opt-name { font-size: 14px; font-weight: 500; }
-  .phase-opt-hint { font-size: 11px; color: var(--text3); margin-top: 3px; }
-  .phase-opt.selected .phase-opt-hint { opacity: 0.8; }
-  .modal-close {
-    display: block;
-    width: 100%;
-    margin-top: 16px;
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border);
-    background: transparent;
-    color: var(--text2);
-    font-size: 14px;
-    cursor: pointer;
-  }
+/* TIMER */
+.timer-row{display:flex;align-items:center;gap:7px;padding-top:9px;border-top:0.5px solid var(--border);margin-top:9px}
+.timer-display{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.5px;color:var(--accent);flex:1}
+.timer-display.done-t{color:var(--green)}
+.timer-btn{padding:6px 13px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;box-shadow:var(--shadow)}
+.timer-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.timer-preset-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;align-items:center}
+.timer-preset{padding:3px 9px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.timer-preset.active-preset{border-color:var(--accent);color:var(--accent-dark);background:var(--accent-bg)}
 
-  /* BOTTOM NAV */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 440px;
-    background: var(--bg);
-    border-top: 0.5px solid var(--border);
-    padding: 12px 20px 20px;
-    display: flex;
-    justify-content: space-around;
-    z-index: 100;
-  }
-  .nav-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 11px;
-    padding: 0 12px;
-    transition: color 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .nav-btn.active { color: var(--accent); }
-  .nav-icon { font-size: 22px; }
+/* CARDIO */
+.cardio-card{margin:0 16px 8px;padding:13px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;gap:11px;box-shadow:var(--shadow)}
+.cardio-icon{width:38px;height:38px;border-radius:var(--radius-sm);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.cardio-name{font-size:14px;font-weight:500;color:var(--text)}
+.cardio-meta{font-size:12px;color:var(--text2);margin-top:2px}
 
-  /* PROGRESS BAR */
-  .progress-section { padding: 12px 16px 4px; }
-  .progress-bar-bg {
-    height: 3px;
-    background: var(--bg3);
-    border-radius: 2px;
-    margin-top: 6px;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.3s;
-  }
-  .progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:0.5px solid var(--border);padding:10px 20px 22px;display:flex;justify-content:space-around;z-index:100}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:0 12px;transition:color 0.15s;-webkit-tap-highlight-color:transparent}
+.nav-btn.active{color:var(--accent-dark)}
+.nav-icon{font-size:21px}
 
-  .divider { height: 0.5px; background: var(--border); margin: 4px 16px; }
+/* HISTORY */
+.session-header{padding:18px 16px 10px}
+.session-title{font-size:20px;font-weight:700;letter-spacing:-0.4px}
+.history-section{padding:0 16px}
+.history-empty{text-align:center;padding:50px 20px;color:var(--text3);font-size:14px}
+.history-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:9px;box-shadow:var(--shadow)}
+.history-ex-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
+.history-weights{display:flex;gap:7px;flex-wrap:wrap}
+.history-weight-tag{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2)}
+.history-weight-tag span{color:var(--accent-dark);font-weight:600}
 
-  /* HISTORY VIEW */
-  .history-section { padding: 0 16px; }
-  .history-empty { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px; }
-  .history-card {
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 10px;
-  }
-  .history-ex-name { font-size: 14px; font-weight: 500; }
-  .history-weights { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-  .history-weight-tag {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: var(--bg3);
-    color: var(--text2);
-    border: 0.5px solid var(--border);
-  }
-  .history-weight-tag span { color: var(--accent); font-weight: 600; }
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;padding:20px 18px 40px;width:100%;max-width:430px;box-shadow:var(--shadow-md)}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.modal-sub{font-size:13px;color:var(--text3);margin-bottom:16px}
+.phase-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.phase-opt{padding:13px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.15s}
+.phase-opt.selected{border-width:1.5px}
+.phase-opt.folicular.selected{border-color:#4a90d9;background:#e8f4fd}
+.phase-opt.ovulacion.selected{border-color:var(--accent);background:var(--accent-bg)}
+.phase-opt.lutea.selected{border-color:var(--amber);background:#fef6e6}
+.phase-opt.menstrual.selected{border-color:var(--red);background:#fdeaea}
+.phase-opt-name{font-size:13px;font-weight:600;color:var(--text)}
+.phase-opt-hint{font-size:11px;color:var(--text3);margin-top:2px}
+.phase-detail{margin-bottom:14px;padding:13px;border-radius:var(--radius-sm);border:0.5px solid var(--border2)}
+.phase-detail.folicular{background:#e8f4fd;border-color:#b8d9f5}
+.phase-detail.ovulacion{background:#f0f8e0;border-color:#c5e08a}
+.phase-detail.lutea{background:#fef6e6;border-color:#f5d68a}
+.phase-detail.menstrual{background:#fdeaea;border-color:#f5b8b8}
+.phase-detail-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.phase-detail.folicular .phase-detail-name{color:#2a6fa8}
+.phase-detail.ovulacion .phase-detail-name{color:#4a7a10}
+.phase-detail.lutea .phase-detail-name{color:#9a6200}
+.phase-detail.menstrual .phase-detail-name{color:#b03030}
+.phase-detail-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.phase-detail-advice{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+.phase-detail.folicular .phase-detail-advice{color:#2a6fa8}
+.phase-detail.ovulacion .phase-detail-advice{color:#4a7a10}
+.phase-detail.lutea .phase-detail-advice{color:#9a6200}
+.phase-detail.menstrual .phase-detail-advice{color:#b03030}
+.modal-divider{height:0.5px;background:var(--border);margin:14px 0}
+.modal-label{font-size:12px;color:var(--text3);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.8px}
+.date-input-row{display:flex;gap:8px;align-items:center}
+.date-input{flex:1;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:14px;outline:none;-webkit-appearance:none}
+.date-input:focus{border-color:var(--accent)}
+.date-save-btn{padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer}
+.cycle-calc-result{font-size:12px;color:var(--text2);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--radius-xs);display:none}
+.modal-close{display:block;width:100%;margin-top:14px;padding:11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:14px;cursor:pointer}
 
-  /* Utility */
-  .hidden { display: none !important; }
-  .section-gap { height: 8px; }
+/* FIRST RUN */
+.first-run-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:20px}
+.first-run-overlay.open{display:flex}
+.first-run-modal{background:var(--bg2);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:380px;box-shadow:var(--shadow-md)}
+.first-run-title{font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:-0.4px}
+.first-run-sub{font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.5}
+.first-run-btn{width:100%;padding:13px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:4px}
+.first-run-skip{width:100%;padding:11px;border-radius:var(--radius-sm);background:transparent;color:var(--text3);font-size:14px;border:none;cursor:pointer;margin-top:8px}
+
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <div>
-    <div class="topbar-title">Mi Rutina</div>
-    <div class="topbar-sub" id="topbar-sub">Semana 1 · Día 1</div>
-  </div>
-  <div class="cycle-pill" onclick="openCycleModal()">
-    <div class="cycle-dot" id="cycle-dot"></div>
-    <span id="cycle-label">Ciclo</span>
+  <div class="topbar-title">Mi Rutina</div>
+  <div class="topbar-right">
+    <div id="sync-status"></div>
+    <div class="cycle-pill" onclick="openCycleModal()">
+      <div class="cycle-dot" id="cycle-dot"></div>
+      <span id="cycle-label">Ciclo</span>
+    </div>
   </div>
 </div>
 
-<!-- MAIN CONTENT -->
 <div id="view-workout">
 
-  <!-- WEEK SELECTOR -->
-  <div class="selector-section">
-    <div class="selector-label">Semana</div>
-    <div class="pills-row" id="week-pills"></div>
+  <!-- COLLAPSIBLE SELECTOR -->
+  <div class="selector-wrap">
+    <div class="selector-toggle" onclick="toggleSelector()" id="selector-toggle">
+      <div class="selector-toggle-left">
+        <span class="selector-toggle-label" id="selector-main-label">Semana 1 · Día 1</span>
+        <span class="selector-toggle-sub" id="selector-sub-label"></span>
+      </div>
+      <span class="selector-toggle-arrow" id="selector-arrow">▾</span>
+    </div>
+    <div class="selector-body" id="selector-body">
+      <div id="selector-grid-container"></div>
+    </div>
   </div>
 
-  <!-- DAY SELECTOR -->
-  <div class="selector-section" style="padding-top:12px;">
-    <div class="selector-label">Día</div>
-    <div class="pills-row" id="day-pills"></div>
-  </div>
-
-  <!-- PROGRESS -->
   <div class="progress-section">
-    <div class="progress-info">
-      <span id="progress-text">0 ejercicios cargados</span>
-      <span id="progress-pct">0%</span>
-    </div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+    <div class="progress-card">
+      <div class="progress-info">
+        <span class="progress-label" id="progress-text">0 de 0 completados</span>
+        <span class="progress-pct" id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
     </div>
   </div>
 
-  <!-- PHASE BANNER -->
-  <div id="phase-banner" class="phase-banner folicular hidden" style="margin-top:12px;">
-    <span id="phase-banner-icon">⬤</span>
+  <div id="phase-banner" class="phase-banner folicular hidden" style="margin-top:10px">
     <span id="phase-banner-text"></span>
   </div>
 
   <div class="section-gap"></div>
-
-  <!-- ROUTINE CONTENT -->
-  <div id="routine-content"></div>
-
+  <div class="exercises-list" id="routine-content"></div>
 </div>
 
-<!-- HISTORY VIEW -->
 <div id="view-history" class="hidden">
-  <div class="session-header">
-    <div class="session-title">Pesos guardados</div>
-  </div>
+  <div class="session-header"><div class="session-title">Pesos guardados</div></div>
   <div class="history-section" id="history-content"></div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <button class="nav-btn active" id="nav-workout" onclick="switchView('workout')">
-    <span class="nav-icon">🏋️</span>
-    Rutina
+    <span class="nav-icon">🏋️</span>Rutina
   </button>
   <button class="nav-btn" id="nav-history" onclick="switchView('history')">
-    <span class="nav-icon">📊</span>
-    Pesos
+    <span class="nav-icon">📊</span>Pesos
   </button>
 </div>
 
@@ -440,698 +248,479 @@
 <div class="modal-overlay" id="cycle-modal">
   <div class="modal">
     <div class="modal-title">Fase del ciclo</div>
+    <div class="modal-sub">Calculada automáticamente · podés ajustarla manualmente</div>
+    <div id="phase-detail-box"></div>
     <div class="phase-options">
-      <div class="phase-opt folicular" onclick="setPhase('folicular')">
-        <div class="phase-opt-name">Folicular</div>
-        <div class="phase-opt-hint">Día 6–13 · Más energía</div>
-      </div>
-      <div class="phase-opt ovulacion" onclick="setPhase('ovulacion')">
-        <div class="phase-opt-name">Ovulación</div>
-        <div class="phase-opt-hint">Día 14 · Pico máximo</div>
-      </div>
-      <div class="phase-opt lutea" onclick="setPhase('lutea')">
-        <div class="phase-opt-name">Lútea</div>
-        <div class="phase-opt-hint">Día 15–28 · Moderada</div>
-      </div>
-      <div class="phase-opt menstrual" onclick="setPhase('menstrual')">
-        <div class="phase-opt-name">Menstrual</div>
-        <div class="phase-opt-hint">Día 1–5 · Cuidate</div>
-      </div>
+      <div class="phase-opt folicular" onclick="setPhaseManual('folicular')"><div class="phase-opt-name">Folicular</div><div class="phase-opt-hint">Día 6–13</div></div>
+      <div class="phase-opt ovulacion" onclick="setPhaseManual('ovulacion')"><div class="phase-opt-name">Ovulación</div><div class="phase-opt-hint">Día 14</div></div>
+      <div class="phase-opt lutea" onclick="setPhaseManual('lutea')"><div class="phase-opt-name">Lútea</div><div class="phase-opt-hint">Día 15–28</div></div>
+      <div class="phase-opt menstrual" onclick="setPhaseManual('menstrual')"><div class="phase-opt-name">Menstrual</div><div class="phase-opt-hint">Día 1–5</div></div>
     </div>
+    <div class="modal-divider"></div>
+    <div class="modal-label">Inicio de último período</div>
+    <div class="date-input-row">
+      <input type="date" class="date-input" id="cycle-date-input"/>
+      <button class="date-save-btn" onclick="saveCycleDate()">Guardar</button>
+    </div>
+    <div class="cycle-calc-result" id="cycle-calc-result"></div>
     <button class="modal-close" onclick="closeCycleModal()">Cerrar</button>
   </div>
 </div>
 
+<!-- FIRST RUN -->
+<div class="first-run-overlay" id="first-run-modal">
+  <div class="first-run-modal">
+    <div class="first-run-title">¡Hola! 👋</div>
+    <div class="first-run-sub">Para calcular tu fase del ciclo automáticamente, ¿cuándo empezó tu última menstruación?</div>
+    <div class="modal-label">Fecha de inicio</div>
+    <input type="date" class="date-input" id="first-run-date" style="width:100%;margin-bottom:4px"/>
+    <button class="first-run-btn" onclick="saveFirstRunDate()">Listo</button>
+    <button class="first-run-skip" onclick="skipFirstRun()">Ahora no</button>
+  </div>
+</div>
+
 <script>
-const ROUTINE = {
-  1: {
-    1: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Peso muerto', series:4, reps:'10', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Estocadas caminando', series:3, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Jumping jacks', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Trote', duracion:'6 min', icono:'🏃‍♀️' }
-    },
-    2: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Jalón al pecho', series:4, reps:'10', musculos:'Espalda / bíceps', tipo:'pull' },
-          { name:'Bíceps con mancuernas', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Press de hombros con mancuernas', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Sillón de abducción', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
-          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-          { name:'Abdominales cortos', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-      ],
-      cardio: { name:'Elíptico', duracion:'8 min', icono:'🚴‍♀️' }
-    },
-    3: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Sentadillas con barra', series:4, reps:'10', musculos:'Cuádriceps / glúteos', tipo:'compound' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Subidas al box', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Sillón cuádriceps', series:3, reps:'8', musculos:'Cuádriceps', tipo:'isolation' },
-          { name:'Bíceps con mancuernas', series:3, reps:'10', musculos:'Bíceps', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos al box', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-          { name:'Estocadas sin peso', series:4, reps:'12', musculos:'Piernas', tipo:'compound' },
-        ]},
-      ],
-      cardio: { name:'Caminata', duracion:'8 min', icono:'🚶‍♀️' }
-    }
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbxUqX_wUhW0DF3DPVSgxeX3Yw3gaLwCmXcwW4hGF1OmgeVHHf-HW2oO_DgwMIvnq2bvHA/exec';
+
+// ── TAGS ─────────────────────────────────────────────────────
+const TAGS={
+  'Abdominales bolitas':             {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abdominales cortitos':            {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abdominales cortos':              {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abdominales cortos con peso':     {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abdominales en V':                {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abdominales tocando talones':     {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Abducción lateral':               {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Abducción lateral con banda':     {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Burpees':                         {zona:'Full body', tipo:'Aeróbico',  lugar:'Piso'},
+  'Bíceps con mancuernas':           {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Piso'},
+  'Espinales':                       {zona:'Espalda',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Extensión abajo en polea':        {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Máquina'},
+  'Fondos en banco':                 {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Piso'},
+  'Hip thrust':                      {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Jalón al pecho':                  {zona:'Espalda',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Jumping jacks':                   {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Mountain climbers':               {zona:'Core',      tipo:'Aeróbico',  lugar:'Piso'},
+  'Pasos laterales con banda':       {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Patada de glúteo en polea':       {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Peso muerto':                     {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Peso muerto con barra':           {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Peso muerto a una pierna':        {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Plancha baja':                    {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Plancha lateral':                 {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Press de hombro en máquina':      {zona:'Hombros',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Press de hombros con mancuernas': {zona:'Hombros',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Press de pecho con mancuernas':   {zona:'Pecho',     tipo:'Anaeróbico',lugar:'Piso'},
+  'Press inclinado con mancuernas':  {zona:'Pecho',     tipo:'Anaeróbico',lugar:'Piso'},
+  'Press francés':                   {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Piso'},
+  'Press militar con mancuernas':    {zona:'Hombros',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Remo en máquina':                 {zona:'Espalda',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Russian twist':                   {zona:'Core',      tipo:'Anaeróbico',lugar:'Piso'},
+  'Saltos al box':                   {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Saltos en estocadas':             {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Saltos en sentadillas':           {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Sentadillas búlgaras':            {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Sentadillas con barra':           {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Sentadillas sumo':                {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Sillón de abducción':             {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Sillón abducción':                {zona:'Glúteos',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Sillón de cuádriceps':            {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Sillón cuádriceps':               {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Sillón de isquiotibiales':        {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Máquina'},
+  'Sprawl':                          {zona:'Core',      tipo:'Aeróbico',  lugar:'Piso'},
+  'Subidas al box':                  {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Subidas al box por lado':         {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Subidas al box por pierna':       {zona:'Piernas',   tipo:'Aeróbico',  lugar:'Piso'},
+  'Touchdowns':                      {zona:'Core',      tipo:'Aeróbico',  lugar:'Piso'},
+  'Tras nuca con mancuernas':        {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Piso'},
+  'Tríceps en polea':                {zona:'Brazos',    tipo:'Anaeróbico',lugar:'Máquina'},
+  'Vuelos laterales':                {zona:'Hombros',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Estocadas atrás':                 {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Estocadas atrás sin peso':        {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Estocadas caminando':             {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+  'Estocadas sin peso':              {zona:'Piernas',   tipo:'Anaeróbico',lugar:'Piso'},
+};
+const PHASE_DETAIL={
+  folicular:{
+    name:'Fase Folicular · Día 6–13',
+    desc:'Los niveles de estrógeno suben progresivamente. Tu energía, fuerza y recuperación mejoran día a día. Es el mejor momento para desafiarte y salir de la zona de confort.',
+    advice:'💪 Recomendado: subir peso o repeticiones',
+    cls:'folicular'
   },
-  2: {
-    1: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Patada de glúteo en polea', series:4, reps:'12', musculos:'Glúteos', tipo:'isolation' },
-          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Extensión abajo en polea', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
-          { name:'Press inclinado con mancuernas', series:4, reps:'8', musculos:'Pecho', tipo:'push' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
-          { name:'Espinales', series:4, reps:'15', musculos:'Lumbar', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros laterales', tipo:'isolation' },
-          { name:'Tras nuca con mancuernas', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
-        ]},
-        { tag:'F', exercises:[
-          { name:'Estocadas atrás', series:3, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Abdominales cortos con peso', series:3, reps:'15', musculos:'Core', tipo:'core' },
-        ]},
-      ],
-      cardio: null
-    },
-    2: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Peso muerto con barra', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Pasos laterales con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
-          { name:'Abducción lateral', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
-          { name:'Patada de glúteo en polea', series:4, reps:'15', musculos:'Glúteos', tipo:'isolation' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
-          { name:'Fondos en banco', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
-          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
-          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Elíptico', duracion:'10 min', icono:'🚴‍♀️' }
-    },
-    3: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Sentadillas búlgaras', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Bíceps con mancuerna', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
-          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Puente de glúteo con peso', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Estocadas sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Trote', duracion:'6 min', icono:'🏃‍♀️' }
-    }
+  ovulacion:{
+    name:'Ovulación · Día 14',
+    desc:'Pico máximo de estrógeno y testosterona. Tu fuerza y coordinación están en su punto más alto. Aprovechá para entrenar pesado y con máxima intensidad.',
+    advice:'🔥 Recomendado: máxima carga, entrenar fuerte',
+    cls:'ovulacion'
   },
-  3: {
-    1: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Sentadillas con barra', series:4, reps:'8', musculos:'Cuádriceps / glúteos', tipo:'compound' },
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Estocadas caminando', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Sillón abducción', series:4, reps:'12', musculos:'Glúteos laterales', tipo:'isolation' },
-          { name:'Bíceps con mancuernas', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos al box', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-          { name:'Estocadas sin peso', series:4, reps:'12', musculos:'Piernas', tipo:'compound' },
-        ]},
-      ],
-      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
-    },
-    2: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
-          { name:'Pasos laterales con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Patada en polea', series:4, reps:'10', musculos:'Glúteos', tipo:'isolation' },
-          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Press de hombro en máquina', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Jumping jacks', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Bici', duracion:'8 min', icono:'🚴‍♀️' }
-    },
-    3: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Jalón al pecho', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Press militar con mancuernas', series:4, reps:'8', musculos:'Hombros', tipo:'push' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Peso muerto a una pierna', series:4, reps:'15', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Subidas al box por pierna', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-      ],
-      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
-    }
+  lutea:{
+    name:'Fase Lútea · Día 15–28',
+    desc:'La progesterona sube y el cuerpo genera más calor. Podés sentir más fatiga o retención. Mantené la rutina pero escuchá cómo te sentís cada día.',
+    advice:'🌙 Recomendado: mantener peso, no forzar',
+    cls:'lutea'
   },
-  4: {
-    1: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Peso muerto con barra', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Sentadillas sumo', series:4, reps:'15', musculos:'Glúteos / aductores', tipo:'compound' },
-          { name:'Estocadas atrás sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
-          { name:'Fondos en banco', series:4, reps:'8', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Sillón de isquiotibiales', series:4, reps:'10', musculos:'Isquiotibiales', tipo:'isolation' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Saltos en sentadillas', series:4, reps:'12', musculos:'Piernas', tipo:'cardio' },
-          { name:'Touchdowns', series:4, reps:'15', musculos:'Core', tipo:'core' },
-          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
-    },
-    2: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Sentadillas búlgaras', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Remo en máquina', series:4, reps:'10', musculos:'Espalda', tipo:'pull' },
-          { name:'Abdominales cortos con peso', series:4, reps:'20', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Puente de glúteo con peso', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
-          { name:'Abducción lateral con banda', series:4, reps:'20', musculos:'Glúteos laterales', tipo:'isolation' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Estocadas sin peso', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en sentadillas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Elíptico', duracion:'8 min', icono:'🚴‍♀️' }
-    },
-    3: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Press de pecho con mancuernas', series:4, reps:'8', musculos:'Pecho', tipo:'push' },
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Patada de glúteos en polea', series:4, reps:'8', musculos:'Glúteos', tipo:'isolation' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Peso muerto a una pierna', series:4, reps:'15', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Estocadas sin peso', series:4, reps:'15', musculos:'Piernas', tipo:'compound' },
-          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-          { name:'Russian twist', series:4, reps:'30', musculos:'Core oblicuo', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Plancha lateral', series:4, reps:'30 seg', musculos:'Core lateral', tipo:'core' },
-          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-      ],
-      cardio: { name:'Trote', duracion:'8 min', icono:'🏃‍♀️' }
-    }
-  },
-  5: {
-    1: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Sentadillas con barra', series:4, reps:'8', musculos:'Cuádriceps / glúteos', tipo:'compound' },
-          { name:'Bíceps con mancuerna', series:4, reps:'10', musculos:'Bíceps', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Sillón de cuádriceps', series:4, reps:'10', musculos:'Cuádriceps', tipo:'isolation' },
-          { name:'Press francés', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Jalón pecho', series:4, reps:'8', musculos:'Espalda', tipo:'pull' },
-          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Pasos laterales con banda', series:4, reps:'25', musculos:'Glúteos laterales', tipo:'isolation' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Abdominales en V', series:4, reps:'8', musculos:'Core', tipo:'core' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
-          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
-    },
-    2: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Peso muerto', series:4, reps:'8', musculos:'Isquios / glúteos', tipo:'compound' },
-          { name:'Vuelos laterales', series:4, reps:'10', musculos:'Hombros', tipo:'isolation' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Tríceps en polea', series:4, reps:'10', musculos:'Tríceps', tipo:'isolation' },
-          { name:'Abdominales bolitas', series:4, reps:'15', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Sillón abducción', series:4, reps:'15', musculos:'Glúteos laterales', tipo:'isolation' },
-          { name:'Plancha baja', series:4, reps:'1 min', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Burpees', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Subidas al box por lado', series:4, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Abdominales cortitos', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-      ],
-      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
-    },
-    3: {
-      blocks: [
-        { tag:'A', exercises:[
-          { name:'Hip thrust', series:4, reps:'8', musculos:'Glúteos', tipo:'compound' },
-        ]},
-        { tag:'B', exercises:[
-          { name:'Patada en polea', series:4, reps:'10', musculos:'Glúteos', tipo:'isolation' },
-        ]},
-        { tag:'C', exercises:[
-          { name:'Estocadas caminando', series:4, reps:'8', musculos:'Piernas', tipo:'compound' },
-          { name:'Abdominales tocando talones', series:4, reps:'30', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'D', exercises:[
-          { name:'Saltos en sentadillas', series:4, reps:'10', musculos:'Piernas', tipo:'cardio' },
-          { name:'Touchdowns', series:4, reps:'12', musculos:'Core', tipo:'core' },
-        ]},
-        { tag:'E', exercises:[
-          { name:'Sprawl', series:4, reps:'8', musculos:'Full body', tipo:'cardio' },
-          { name:'Saltos en estocadas', series:4, reps:'15', musculos:'Piernas', tipo:'cardio' },
-        ]},
-        { tag:'F', exercises:[
-          { name:'Subidas al box por pierna', series:3, reps:'8', musculos:'Glúteos / cuádriceps', tipo:'compound' },
-          { name:'Mountain climbers', series:4, reps:'30', musculos:'Full body', tipo:'cardio' },
-        ]},
-      ],
-      cardio: { name:'Caminata', duracion:'12 min', icono:'🚶‍♀️' }
-    }
+  menstrual:{
+    name:'Menstruación · Día 1–5',
+    desc:'Los niveles hormonales están en su punto más bajo. Es normal sentir cansancio o molestias. El movimiento suave ayuda, pero priorizá el descanso si lo necesitás.',
+    advice:'❤️ Recomendado: bajar peso o descansar si es necesario',
+    cls:'menstrual'
   }
 };
 
-const EXERCISE_ICONS = {
-  compound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4v16M18 4v16M3 12h18"/></svg>`,
-  isolation: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3"/><path d="M12 11v10"/><path d="M9 16h6"/></svg>`,
-  core: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="12" rx="5" ry="8"/><path d="M12 4v16M7 8l-3-2M17 8l3-2M7 16l-3 2M17 16l3 2"/></svg>`,
-  pull: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 9l7-4 7 4"/></svg>`,
-  push: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5M5 15l7 4 7-4"/></svg>`,
-  cardio: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h3l3-7 4 14 3-7h5"/></svg>`,
+function getTags(n){return TAGS[n]||null}
+
+function renderPhaseDetail(phase){
+  const box=document.getElementById('phase-detail-box');
+  if(!box) return;
+  if(!phase||!PHASE_DETAIL[phase]){box.innerHTML='';return}
+  const d=PHASE_DETAIL[phase];
+  box.innerHTML=`<div class="phase-detail ${d.cls}"><div class="phase-detail-name">${d.name}</div><div class="phase-detail-desc">${d.desc}</div><div class="phase-detail-advice">${d.advice}</div></div>`;
+}
+
+// ── ROUTINE ───────────────────────────────────────────────────
+function ex(n,s,r,timer=false){return{n,s,r,timer}}
+const R={
+1:{1:{exs:[ex('Hip thrust',4,'8'),ex('Plancha lateral',4,'30 seg',true),ex('Peso muerto',4,'10'),ex('Abdominales cortos con peso',4,'20'),ex('Estocadas caminando',3,'8'),ex('Abdominales tocando talones',4,'30'),ex('Jumping jacks',4,'30'),ex('Touchdowns',4,'12'),ex('Burpees',4,'8'),ex('Saltos en estocadas',4,'15')],cardio:{n:'Trote',d:'6 min',i:'🏃‍♀️'}},
+   2:{exs:[ex('Jalón al pecho',4,'10'),ex('Bíceps con mancuernas',4,'10'),ex('Press de hombros con mancuernas',4,'8'),ex('Abdominales bolitas',4,'15'),ex('Sillón de abducción',4,'15'),ex('Plancha baja',4,'1 min',true),ex('Saltos en estocadas',4,'15'),ex('Saltos en sentadillas',4,'10'),ex('Russian twist',4,'30'),ex('Mountain climbers',4,'30'),ex('Abdominales cortos',4,'30')],cardio:{n:'Elíptico',d:'8 min',i:'🚴‍♀️'}}},
+2:{1:{exs:[ex('Sentadillas con barra',4,'10'),ex('Russian twist',4,'30'),ex('Subidas al box',4,'8'),ex('Press francés',4,'10'),ex('Sillón de cuádriceps',3,'8'),ex('Bíceps con mancuernas',3,'10'),ex('Sprawl',4,'8'),ex('Saltos al box',4,'10'),ex('Abdominales en V',4,'8'),ex('Abdominales bolitas',4,'15'),ex('Estocadas sin peso',4,'12')],cardio:{n:'Caminata',d:'8 min',i:'🚶‍♀️'}},
+   2:{exs:[ex('Patada de glúteo en polea',4,'12'),ex('Plancha baja',4,'1 min',true),ex('Extensión abajo en polea',4,'8'),ex('Press de pecho con mancuernas',4,'8'),ex('Sillón de isquiotibiales',4,'10'),ex('Espinales',4,'15'),ex('Vuelos laterales',4,'10'),ex('Tras nuca con mancuernas',4,'8'),ex('Touchdowns',4,'15'),ex('Burpees',4,'8'),ex('Saltos en sentadillas',4,'12'),ex('Estocadas atrás',3,'8'),ex('Abdominales cortos con peso',3,'15')],cardio:null}},
+3:{1:{exs:[ex('Peso muerto con barra',4,'8'),ex('Russian twist',4,'30'),ex('Pasos laterales con banda',4,'20'),ex('Abducción lateral',4,'15'),ex('Patada de glúteo en polea',4,'15'),ex('Vuelos laterales',4,'10'),ex('Fondos en banco',4,'8'),ex('Sillón de isquiotibiales',4,'10'),ex('Abdominales tocando talones',4,'30'),ex('Saltos en sentadillas',4,'12'),ex('Touchdowns',4,'15'),ex('Mountain climbers',4,'30')],cardio:{n:'Elíptico',d:'10 min',i:'🚴‍♀️'}},
+   2:{exs:[ex('Sentadillas búlgaras',4,'8'),ex('Plancha lateral',4,'30 seg',true),ex('Bíceps con mancuernas',4,'10'),ex('Abdominales cortos con peso',4,'20'),ex('Hip thrust',4,'8'),ex('Russian twist',4,'30'),ex('Estocadas sin peso',4,'8'),ex('Touchdowns',4,'12'),ex('Burpees',4,'8'),ex('Saltos en estocadas',4,'15')],cardio:{n:'Trote',d:'6 min',i:'🏃‍♀️'}}},
+4:{1:{exs:[ex('Sentadillas con barra',4,'8'),ex('Plancha lateral',4,'30 seg',true),ex('Estocadas caminando',4,'8'),ex('Press francés',4,'10'),ex('Sillón de abducción',4,'12'),ex('Bíceps con mancuernas',4,'10'),ex('Sprawl',4,'8'),ex('Saltos al box',4,'10'),ex('Abdominales en V',4,'8'),ex('Abdominales bolitas',4,'15'),ex('Estocadas sin peso',4,'12')],cardio:{n:'Trote',d:'8 min',i:'🏃‍♀️'}},
+   2:{exs:[ex('Hip thrust',4,'8'),ex('Pasos laterales con banda',4,'20'),ex('Patada de glúteo en polea',4,'10'),ex('Abdominales cortos con peso',4,'20'),ex('Press de hombro en máquina',4,'8'),ex('Abdominales tocando talones',4,'30'),ex('Jumping jacks',4,'30'),ex('Touchdowns',4,'12'),ex('Burpees',4,'8'),ex('Saltos en estocadas',4,'15')],cardio:{n:'Bici',d:'8 min',i:'🚴‍♀️'}}},
+5:{1:{exs:[ex('Jalón al pecho',4,'8'),ex('Vuelos laterales',4,'10'),ex('Press de hombros con mancuernas',4,'8'),ex('Abdominales bolitas',4,'15'),ex('Peso muerto con barra',4,'15'),ex('Plancha baja',4,'1 min',true),ex('Saltos en estocadas',4,'15'),ex('Saltos en sentadillas',4,'10'),ex('Russian twist',4,'30'),ex('Subidas al box',4,'8'),ex('Abdominales cortitos',4,'30')],cardio:{n:'Trote',d:'8 min',i:'🏃‍♀️'}},
+   2:{exs:[ex('Peso muerto con barra',4,'8'),ex('Russian twist',4,'30'),ex('Sentadillas sumo',4,'15'),ex('Estocadas atrás',4,'8'),ex('Vuelos laterales',4,'10'),ex('Fondos en banco',4,'8'),ex('Sillón de isquiotibiales',4,'10'),ex('Abdominales tocando talones',4,'30'),ex('Saltos en sentadillas',4,'12'),ex('Touchdowns',4,'15'),ex('Mountain climbers',4,'30')],cardio:{n:'Caminata',d:'12 min',i:'🚶‍♀️'}}},
+6:{1:{exs:[ex('Sentadillas búlgaras',4,'8'),ex('Plancha lateral',4,'30 seg',true),ex('Remo en máquina',4,'10'),ex('Abdominales cortos con peso',4,'20'),ex('Hip thrust',4,'8'),ex('Abducción lateral con banda',4,'20'),ex('Estocadas sin peso',4,'8'),ex('Touchdowns',4,'12'),ex('Burpees',4,'8'),ex('Saltos en sentadillas',4,'15')],cardio:{n:'Elíptico',d:'8 min',i:'🚴‍♀️'}},
+   2:{exs:[ex('Press de pecho con mancuernas',4,'8'),ex('Vuelos laterales',4,'10'),ex('Patada de glúteo en polea',4,'8'),ex('Abdominales bolitas',4,'15'),ex('Peso muerto con barra',4,'15'),ex('Plancha lateral',4,'30 seg',true),ex('Estocadas sin peso',4,'15'),ex('Saltos en sentadillas',4,'10'),ex('Russian twist',4,'30'),ex('Plancha baja',4,'1 min',true),ex('Abdominales cortitos',4,'30')],cardio:{n:'Trote',d:'8 min',i:'🏃‍♀️'}}},
+7:{1:{exs:[ex('Sentadillas con barra',4,'8'),ex('Bíceps con mancuernas',4,'10'),ex('Sillón de cuádriceps',4,'10'),ex('Press francés',4,'10'),ex('Jalón al pecho',4,'8'),ex('Plancha baja',4,'1 min',true),ex('Sprawl',4,'8'),ex('Pasos laterales con banda',4,'25'),ex('Abdominales en V',4,'8'),ex('Abdominales tocando talones',4,'30'),ex('Mountain climbers',4,'30')],cardio:{n:'Caminata',d:'12 min',i:'🚶‍♀️'}},
+   2:{exs:[ex('Hip thrust',4,'8'),ex('Pasos laterales con banda',4,'20'),ex('Sillón de abducción',4,'15'),ex('Patada de glúteo en polea',4,'12'),ex('Sentadillas sumo',4,'12'),ex('Abducción lateral con banda',4,'20'),ex('Saltos en estocadas',4,'15'),ex('Touchdowns',4,'12'),ex('Burpees',4,'8'),ex('Mountain climbers',4,'30')],cardio:{n:'Bici',d:'10 min',i:'🚴‍♀️'}}},
+8:{1:{exs:[ex('Peso muerto con barra',4,'8'),ex('Vuelos laterales',4,'10'),ex('Tríceps en polea',4,'10'),ex('Abdominales bolitas',4,'15'),ex('Sillón de abducción',4,'15'),ex('Plancha baja',4,'1 min',true),ex('Burpees',4,'8'),ex('Saltos en sentadillas',4,'10'),ex('Subidas al box',4,'8'),ex('Abdominales cortitos',4,'30')],cardio:{n:'Caminata',d:'12 min',i:'🚶‍♀️'}},
+   2:{exs:[ex('Hip thrust',4,'8'),ex('Patada de glúteo en polea',4,'10'),ex('Pasos laterales con banda',4,'20'),ex('Estocadas caminando',4,'8'),ex('Abdominales tocando talones',4,'30'),ex('Saltos en sentadillas',4,'10'),ex('Touchdowns',4,'12'),ex('Sprawl',4,'8'),ex('Saltos en estocadas',4,'15'),ex('Subidas al box',3,'8'),ex('Mountain climbers',4,'30')],cardio:{n:'Caminata',d:'12 min',i:'🚶‍♀️'}}},
 };
 
-const PHASE_DATA = {
-  folicular: { label: 'Fase folicular · Más energía para entrenar 💪', dot:'#6bb8ff' },
-  ovulacion: { label: 'Ovulación · Pico de energía y fuerza 🔥', dot:'#c8f56a' },
-  lutea: { label: 'Fase lútea · Moderá la intensidad si es necesario 🌙', dot:'#ffc46b' },
-  menstrual: { label: 'Menstruación · Escuchá tu cuerpo ❤️', dot:'#ff6b6b' },
-};
+// ── STATE ─────────────────────────────────────────────────────
+let cW=1,cD=1,selectorOpen=false;
+let weights={},checks={},doneSessions={},timers={};
+let cycleStartDate=null,manualPhase=null,syncTimeout=null;
 
-let currentWeek = 1;
-let currentDay = 1;
-let currentPhase = null;
-let weights = {};
-let currentView = 'workout';
+function sk(n){return 'ex_'+n.replace(/\s+/g,'_')}
+function ck(n,w,d){return 'chk_w'+w+'d'+d+'_'+n.replace(/\s+/g,'_')}
+function sessKey(w,d){return 'sess_w'+w+'d'+d}
+function gw(n){return weights[sk(n)]||0}
+function sw(n,v){weights[sk(n)]=v;persistAll()}
+function isChecked(n){return !!checks[ck(n,cW,cD)]}
+function setChecked(n,v){checks[ck(n,cW,cD)]=v;persistAll()}
+function isSessDone(w,d){return !!doneSessions[sessKey(w,d)]}
+function toggleSessDone(w,d){doneSessions[sessKey(w,d)]=!isSessDone(w,d);persistAll();renderSelectorGrid()}
 
-function storageKey(exName, week, day) {
-  return `w${week}d${day}_${exName.replace(/\s+/g,'_')}`;
+// ── PERSIST ───────────────────────────────────────────────────
+function persistAll(){
+  const data={weights,checks,doneSessions,cycleStartDate,manualPhase};
+  try{localStorage.setItem('gym_data',JSON.stringify(data))}catch(e){}
+  clearTimeout(syncTimeout);
+  syncTimeout=setTimeout(()=>syncToSheets(data),1500);
 }
-
-function loadWeights() {
-  try { weights = JSON.parse(localStorage.getItem('gym_weights') || '{}'); } catch(e) { weights = {}; }
+function setSyncStatus(s){
+  const el=document.getElementById('sync-status');if(!el)return;
+  if(s==='saving'){el.textContent='Guardando...';el.style.color='#999'}
+  else if(s==='ok'){el.textContent='✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent=''},2500)}
+  else if(s==='err'){el.textContent='sin conexión';el.style.color='var(--amber)'}
 }
-function saveWeights() {
-  try { localStorage.setItem('gym_weights', JSON.stringify(weights)); } catch(e) {}
+function syncToSheets(data){
+  setSyncStatus('saving');
+  fetch(SHEETS_URL,{method:'POST',body:JSON.stringify(data)})
+    .then(r=>r.text()).then(()=>setSyncStatus('ok')).catch(()=>setSyncStatus('err'));
 }
-function loadPhase() {
-  try { currentPhase = localStorage.getItem('gym_phase') || null; } catch(e) {}
-}
-function savePhase() {
-  try { if(currentPhase) localStorage.setItem('gym_phase', currentPhase); else localStorage.removeItem('gym_phase'); } catch(e) {}
-}
-
-function getWeight(exName) {
-  const k = storageKey(exName, currentWeek, currentDay);
-  return weights[k] || 0;
-}
-function setWeight(exName, val) {
-  const k = storageKey(exName, currentWeek, currentDay);
-  weights[k] = val;
-  saveWeights();
-}
-
-function renderWeekPills() {
-  const el = document.getElementById('week-pills');
-  el.innerHTML = '';
-  for (let w = 1; w <= 5; w++) {
-    const p = document.createElement('div');
-    p.className = 'pill' + (w === currentWeek ? ' active' : '');
-    p.textContent = 'Semana ' + w;
-    p.onclick = () => { currentWeek = w; renderAll(); };
-    el.appendChild(p);
-  }
-}
-
-function renderDayPills() {
-  const el = document.getElementById('day-pills');
-  el.innerHTML = '';
-  for (let d = 1; d <= 3; d++) {
-    const p = document.createElement('div');
-    p.className = 'pill' + (d === currentDay ? ' active' : '');
-    p.textContent = 'Día ' + d;
-    p.onclick = () => { currentDay = d; renderAll(); };
-    el.appendChild(p);
-  }
+async function loadAll(){
+  try{
+    const local=JSON.parse(localStorage.getItem('gym_data')||'{}');
+    weights=local.weights||{};checks=local.checks||{};doneSessions=local.doneSessions||{};
+    cycleStartDate=local.cycleStartDate||null;manualPhase=local.manualPhase||null;
+  }catch(e){weights={};checks={};doneSessions={}}
+  try{
+    const res=await fetch(SHEETS_URL);
+    const text=await res.text();
+    if(text&&text!=='{}'){
+      const r=JSON.parse(text);
+      if(r.weights)        weights=r.weights;
+      if(r.checks)         checks=r.checks;
+      if(r.doneSessions)   doneSessions=r.doneSessions;
+      if(r.cycleStartDate) cycleStartDate=r.cycleStartDate;
+      if(r.manualPhase)    manualPhase=r.manualPhase;
+      try{localStorage.setItem('gym_data',JSON.stringify({weights,checks,doneSessions,cycleStartDate,manualPhase}))}catch(e){}
+    }
+  }catch(e){}
 }
 
-function renderPhase() {
-  const banner = document.getElementById('phase-banner');
-  const dot = document.getElementById('cycle-dot');
-  const label = document.getElementById('cycle-label');
-  if (currentPhase && PHASE_DATA[currentPhase]) {
-    const pd = PHASE_DATA[currentPhase];
-    banner.className = 'phase-banner ' + currentPhase;
-    document.getElementById('phase-banner-text').textContent = pd.label;
+// ── CYCLE ─────────────────────────────────────────────────────
+function calcPhase(){
+  if(manualPhase) return manualPhase;
+  if(!cycleStartDate) return null;
+  const diff=Math.floor((new Date()-new Date(cycleStartDate))/(864e5));
+  const d=((diff%28)+28)%28+1;
+  return d<=5?'menstrual':d<=13?'folicular':d===14?'ovulacion':'lutea';
+}
+function phaseLabel(p){return{folicular:'Fase folicular · más energía 💪',ovulacion:'Ovulación · pico de fuerza 🔥',lutea:'Fase lútea · moderá si es necesario 🌙',menstrual:'Menstruación · escuchá tu cuerpo ❤️'}[p]||''}
+function phaseName(p){return{folicular:'Folicular',ovulacion:'Ovulación',lutea:'Lútea',menstrual:'Menstrual'}[p]||'Ciclo'}
+function phaseColor(p){return{folicular:'#4a90d9',ovulacion:'var(--accent)',lutea:'var(--amber)',menstrual:'var(--red)'}[p]||'var(--accent)'}
+function renderPhase(){
+  const phase=calcPhase();
+  const banner=document.getElementById('phase-banner');
+  const dot=document.getElementById('cycle-dot');
+  const lbl=document.getElementById('cycle-label');
+  if(phase){
+    banner.className='phase-banner '+phase;
+    document.getElementById('phase-banner-text').textContent=phaseLabel(phase);
     banner.classList.remove('hidden');
-    dot.style.background = pd.dot;
-    const names = {folicular:'Folicular', ovulacion:'Ovulación', lutea:'Lútea', menstrual:'Menstrual'};
-    label.textContent = names[currentPhase];
-    document.querySelectorAll('.phase-opt').forEach(el => {
-      el.classList.remove('selected');
-      if (el.classList.contains(currentPhase)) el.classList.add('selected');
-    });
+    dot.style.background=phaseColor(phase);
+    lbl.textContent=phaseName(phase);
   } else {
     banner.classList.add('hidden');
-    dot.style.background = '#666';
-    label.textContent = 'Ciclo';
+    dot.style.background='var(--accent)';
+    lbl.textContent='Ciclo';
+  }
+  document.querySelectorAll('.phase-opt').forEach(el=>{
+    el.classList.remove('selected');
+    if(phase&&el.classList.contains(phase)) el.classList.add('selected');
+  });
+}
+function openCycleModal(){
+  if(cycleStartDate) document.getElementById('cycle-date-input').value=cycleStartDate;
+  updateCycleCalcResult();
+  renderPhaseDetail(calcPhase());
+  document.getElementById('cycle-modal').classList.add('open');
+}
+function closeCycleModal(){document.getElementById('cycle-modal').classList.remove('open')}
+function setPhaseManual(p){manualPhase=p;persistAll();renderPhase();closeCycleModal()}
+function saveCycleDate(){
+  const val=document.getElementById('cycle-date-input').value;
+  if(!val) return;
+  cycleStartDate=val;manualPhase=null;persistAll();renderPhase();updateCycleCalcResult();closeCycleModal();
+}
+function updateCycleCalcResult(){
+  const el=document.getElementById('cycle-calc-result');
+  if(!cycleStartDate){el.style.display='none';return}
+  const diff=Math.floor((new Date()-new Date(cycleStartDate))/(864e5));
+  const d=((diff%28)+28)%28+1;
+  el.style.display='block';
+  el.textContent='Día '+d+' del ciclo · '+phaseName(calcPhase());
+}
+function checkFirstRun(){
+  if(!cycleStartDate&&!manualPhase){
+    document.getElementById('first-run-modal').classList.add('open');
+    const d=new Date();d.setDate(d.getDate()-3);
+    document.getElementById('first-run-date').value=d.toISOString().split('T')[0];
+  }
+}
+function saveFirstRunDate(){
+  const val=document.getElementById('first-run-date').value;
+  if(val){cycleStartDate=val;manualPhase=null;persistAll();renderPhase()}
+  document.getElementById('first-run-modal').classList.remove('open');
+}
+function skipFirstRun(){document.getElementById('first-run-modal').classList.remove('open')}
+
+// ── SELECTOR ──────────────────────────────────────────────────
+function toggleSelector(){
+  selectorOpen=!selectorOpen;
+  document.getElementById('selector-body').classList.toggle('open',selectorOpen);
+  document.getElementById('selector-arrow').classList.toggle('open',selectorOpen);
+}
+function updateSelectorLabel(){
+  document.getElementById('selector-main-label').textContent='Semana '+cW+' · Día '+cD;
+  const done=isSessDone(cW,cD);
+  document.getElementById('selector-sub-label').textContent=done?'✓ Completado':'';
+}
+function renderSelectorGrid(){
+  const cont=document.getElementById('selector-grid-container');
+  cont.innerHTML='';
+  for(let w=1;w<=8;w++){
+    const wLabel=document.createElement('div');
+    wLabel.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;margin:10px 0 6px;padding:0 2px';
+    wLabel.textContent='Semana '+w;
+    cont.appendChild(wLabel);
+    const row=document.createElement('div');
+    row.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:4px';
+    for(let d=1;d<=2;d++){
+      const done=isSessDone(w,d);
+      const sel=(w===cW&&d===cD);
+      const item=document.createElement('div');
+      item.className='session-item'+(sel?' selected':'')+(done?' done-session':'');
+      item.innerHTML=`<span class="session-item-label">Día ${d}</span><div class="session-checkbox">${done?'<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':''}</div>`;
+      // click left area = select, click checkbox = toggle done
+      item.addEventListener('click',(e)=>{
+        const box=item.querySelector('.session-checkbox');
+        const boxRect=box.getBoundingClientRect();
+        if(e.clientX>=boxRect.left-8){
+          toggleSessDone(w,d);
+        } else {
+          cW=w;cD=d;
+          updateSelectorLabel();
+          renderSelectorGrid();
+          renderProgress();
+          renderRoutine();
+          // close after selecting
+          selectorOpen=false;
+          document.getElementById('selector-body').classList.remove('open');
+          document.getElementById('selector-arrow').classList.remove('open');
+        }
+      });
+      row.appendChild(item);
+    }
+    cont.appendChild(row);
   }
 }
 
-function countLoaded(week, day) {
-  const session = ROUTINE[week][day];
-  if (!session) return { loaded: 0, total: 0 };
-  let total = 0, loaded = 0;
-  session.blocks.forEach(b => b.exercises.forEach(ex => {
-    total++;
-    if (getExerciseWeight(ex.name, week, day) > 0) loaded++;
-  }));
-  return { loaded, total };
+// ── PROGRESS ──────────────────────────────────────────────────
+function renderProgress(){
+  const sess=R[cW][cD];
+  let tot=0,done=0;
+  sess.exs.forEach(e=>{tot++;if(isChecked(e.n))done++});
+  const pct=tot>0?Math.round(done/tot*100):0;
+  document.getElementById('progress-text').textContent=done+' de '+tot+' completados';
+  document.getElementById('progress-pct').textContent=pct+'%';
+  document.getElementById('progress-bar').style.width=pct+'%';
 }
 
-function getExerciseWeight(exName, w, d) {
-  const k = storageKey(exName, w, d);
-  return weights[k] || 0;
-}
+// ── TIMER ─────────────────────────────────────────────────────
+function timerKey(n){return cW+'_'+cD+'_'+n}
+function startTimer(n){const k=timerKey(n);if(timers[k]&&timers[k].interval)return;if(!timers[k])timers[k]={elapsed:0,interval:null,preset:30};timers[k].interval=setInterval(()=>{timers[k].elapsed++;updateTimerDisplay(n)},1000);updateTimerBtns(n)}
+function pauseTimer(n){const k=timerKey(n);if(!timers[k])return;clearInterval(timers[k].interval);timers[k].interval=null;updateTimerBtns(n)}
+function resetTimer(n){const k=timerKey(n);if(timers[k])clearInterval(timers[k].interval);timers[k]={elapsed:0,interval:null,preset:timers[k]?timers[k].preset:30};updateTimerDisplay(n);updateTimerBtns(n)}
+function setPreset(n,secs){const k=timerKey(n);if(!timers[k])timers[k]={elapsed:0,interval:null,preset:secs};else timers[k].preset=secs;resetTimer(n);document.querySelectorAll('.tp-'+CSS.escape(n)).forEach(el=>{el.classList.toggle('active-preset',parseInt(el.dataset.secs)===secs)})}
+function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return(m>0?m+'m ':'')+String(sec).padStart(2,'0')+'s'}
+function updateTimerDisplay(n){const k=timerKey(n);const t=timers[k]||{elapsed:0,preset:30};const el=document.getElementById('td-'+CSS.escape(n));if(!el)return;const rem=Math.max(0,t.preset-t.elapsed);if(t.elapsed>=t.preset){el.textContent='¡Listo!';el.className='timer-display done-t';pauseTimer(n)}else{el.textContent=fmtTime(rem);el.className='timer-display'+(t.interval?' running':'')}}
+function updateTimerBtns(n){const k=timerKey(n);const running=timers[k]&&timers[k].interval;const btn=document.getElementById('tbstart-'+CSS.escape(n));if(btn){btn.textContent=running?'Pausar':'Iniciar';btn.className='timer-btn'+(running?' active':'')}}
 
-function renderProgress() {
-  const { loaded, total } = countLoaded(currentWeek, currentDay);
-  const pct = total > 0 ? Math.round(loaded / total * 100) : 0;
-  document.getElementById('progress-text').textContent = `${loaded} de ${total} ejercicios con peso`;
-  document.getElementById('progress-pct').textContent = pct + '%';
-  document.getElementById('progress-bar').style.width = pct + '%';
-}
+// ── WEIGHT ────────────────────────────────────────────────────
+function adjustWeight(n,delta){const nv=Math.max(0,Math.round((gw(n)+delta)*10)/10);sw(n,nv);const inp=document.getElementById('wi-'+CSS.escape(n));if(inp)inp.value=nv>0?nv:''}
+function inputWeight(n,val){const nv=parseFloat(val)||0;sw(n,Math.max(0,nv))}
 
-function renderRoutine() {
-  const content = document.getElementById('routine-content');
-  content.innerHTML = '';
-  const session = ROUTINE[currentWeek] && ROUTINE[currentWeek][currentDay];
-  if (!session) return;
+// ── CHECK ─────────────────────────────────────────────────────
+function toggleCheck(n){setChecked(n,!isChecked(n));renderRoutine();renderProgress()}
 
-  document.getElementById('topbar-sub').textContent = `Semana ${currentWeek} · Día ${currentDay}`;
-  document.getElementById('session-header-title') && (document.getElementById('session-header-title').textContent = `Semana ${currentWeek} · Día ${currentDay}`);
+// ── RENDER ROUTINE ────────────────────────────────────────────
+function renderRoutine(){
+  const content=document.getElementById('routine-content');
+  content.innerHTML='';
+  const sess=R[cW][cD];
+  const pending=sess.exs.filter(e=>!isChecked(e.n));
+  const done=sess.exs.filter(e=>isChecked(e.n));
+  const ordered=[...pending,...done];
 
-  session.blocks.forEach(block => {
-    const blockEl = document.createElement('div');
-    blockEl.className = 'block';
+  ordered.forEach(ex=>{
+    const isDone=isChecked(ex.n);
+    const w=gw(ex.n);
+    const tags=getTags(ex.n);
+    const exEl=document.createElement('div');
+    exEl.className='exercise'+(isDone?' done':'');
+    exEl.id='ex-'+CSS.escape(ex.n);
 
-    const header = document.createElement('div');
-    header.className = 'block-header';
-    header.innerHTML = `<div class="block-tag">${block.tag}</div><div class="block-name">${block.exercises.map(e=>e.musculos).filter((v,i,a)=>a.indexOf(v)===i).join(' · ')}</div>`;
-    blockEl.appendChild(header);
+    const checkIcon=isDone?'<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
 
-    block.exercises.forEach(ex => {
-      const exEl = document.createElement('div');
-      exEl.className = 'exercise';
+    // lugar badge next to name
+    let lugarBadge='';
+    if(tags){
+      const lugarClass=tags.lugar==='Máquina'?'tag-lugar tag-lugar-maquina':'tag-lugar tag-lugar-piso';
+      lugarBadge=`<div class="chip ${lugarClass}" style="flex-shrink:0">${tags.lugar}</div>`;
+    }
 
-      const icon = EXERCISE_ICONS[ex.tipo] || EXERCISE_ICONS.compound;
-      const weight = getWeight(ex.name);
+    // Group 1: reps (highlighted first), series, desc
+    const repsLabel= /seg|min/i.test(ex.r) ? ex.r : ex.r+' reps';
+    const g1=`<div class="chips-group-1"><div class="chip reps">${repsLabel}</div><div class="chip series">${ex.s} series</div><div class="chip">1-3 min desc</div></div>`;
 
-      exEl.innerHTML = `
-        <div class="ex-top">
-          <div class="ex-name">${ex.name}</div>
-          <div class="ex-image">${icon}</div>
+    // Group 2: zona + tipo only
+    let g2='';
+    if(tags){
+      g2=`<div class="chips-group-2"><div class="chip tag-zona">${tags.zona}</div><div class="chip ${tags.tipo==='Aeróbico'?'tag-tipo-a':'tag-tipo-an'}">${tags.tipo}</div></div>`;
+    }
+
+    let html=`
+      <div class="ex-top">
+        <button class="check-btn${isDone?' checked':''}" id="chk-${CSS.escape(ex.n)}" onclick="toggleCheck('${ex.n.replace(/'/g,"\\'")}')">${checkIcon}</button>
+        <div class="ex-name">${ex.n}</div>
+        ${lugarBadge}
+      </div>
+      ${g1}${g2}
+      <div class="weight-row">
+        <div class="weight-label">Peso</div>
+        <div class="weight-controls">
+          <button class="weight-btn" onclick="adjustWeight('${ex.n.replace(/'/g,"\\'")}', -1)">−</button>
+          <input class="weight-input" id="wi-${CSS.escape(ex.n)}" type="number" inputmode="decimal" min="0" step="1" placeholder="—" value="${w>0?w:''}" onchange="inputWeight('${ex.n.replace(/'/g,"\\'")}', this.value)"/>
+          <button class="weight-btn" onclick="adjustWeight('${ex.n.replace(/'/g,"\\'")}', +1)">+</button>
         </div>
-        <div class="ex-chips">
-          <div class="chip series">${ex.series} series</div>
-          <div class="chip">${ex.reps} reps</div>
-          <div class="chip">1-3 min desc</div>
-        </div>
-        <div class="weight-row">
-          <div class="weight-label">Peso usado</div>
-          <div class="weight-controls">
-            <button class="weight-btn" onclick="adjustWeight('${ex.name}', -2.5)">−</button>
-            <div class="weight-val" id="wval-${CSS.escape(ex.name)}">${weight > 0 ? weight + ' kg' : '— kg'}</div>
-            <button class="weight-btn" onclick="adjustWeight('${ex.name}', 2.5)">+</button>
-          </div>
-        </div>
-      `;
-      blockEl.appendChild(exEl);
-    });
+        <div class="weight-unit">kg</div>
+      </div>`;
 
-    content.appendChild(blockEl);
+    if(ex.timer){
+      const k=timerKey(ex.n);
+      const t=timers[k]||{elapsed:0,preset:30};
+      const rem=Math.max(0,t.preset-t.elapsed);
+      const isDoneT=t.elapsed>=t.preset;
+      const running=!!(t.interval);
+      html+=`
+      <div class="timer-row">
+        <div class="timer-display${isDoneT?' done-t':''}" id="td-${CSS.escape(ex.n)}">${isDoneT?'¡Listo!':fmtTime(rem)}</div>
+        <button class="timer-btn${running?' active':''}" id="tbstart-${CSS.escape(ex.n)}" onclick="${running?'pauseTimer':'startTimer'}('${ex.n.replace(/'/g,"\\'")}')">${running?'Pausar':'Iniciar'}</button>
+        <button class="timer-btn" onclick="resetTimer('${ex.n.replace(/'/g,"\\'")}')">Reset</button>
+      </div>
+      <div class="timer-preset-row">
+        <span style="font-size:11px;color:var(--text3)">Dur:</span>
+        ${[20,30,45,60].map(s=>`<div class="timer-preset tp-${CSS.escape(ex.n)}${t.preset===s?' active-preset':''}" data-secs="${s}" onclick="setPreset('${ex.n.replace(/'/g,"\\'")}',${s})">${s}s</div>`).join('')}
+      </div>`;
+    }
+
+    exEl.innerHTML=html;
+    content.appendChild(exEl);
   });
 
-  if (session.cardio) {
-    const cardioEl = document.createElement('div');
-    cardioEl.className = 'cardio-card';
-    cardioEl.innerHTML = `
-      <div class="cardio-icon">${session.cardio.icono}</div>
-      <div class="cardio-info">
-        <div class="cardio-name">${session.cardio.name}</div>
-        <div class="cardio-meta">${session.cardio.duracion}</div>
-      </div>
-    `;
-    content.appendChild(cardioEl);
+  if(sess.cardio){
+    const c=document.createElement('div');
+    c.className='cardio-card';
+    c.innerHTML=`<div class="cardio-icon">${sess.cardio.i}</div><div><div class="cardio-name">${sess.cardio.n}</div><div class="cardio-meta">${sess.cardio.d}</div></div>`;
+    content.appendChild(c);
   }
 }
 
-function adjustWeight(exName, delta) {
-  let current = getWeight(exName);
-  let newVal = Math.max(0, Math.round((current + delta) * 10) / 10);
-  setWeight(exName, newVal);
-  const el = document.getElementById('wval-' + CSS.escape(exName));
-  if (el) el.textContent = newVal > 0 ? newVal + ' kg' : '— kg';
-  renderProgress();
-}
-
-function renderAll() {
-  renderWeekPills();
-  renderDayPills();
+function renderAll(){
+  updateSelectorLabel();
+  renderSelectorGrid();
   renderPhase();
   renderProgress();
   renderRoutine();
 }
 
-function renderHistory() {
-  const container = document.getElementById('history-content');
-  container.innerHTML = '';
-  
-  const allEntries = [];
-  for (const key in weights) {
-    if (weights[key] > 0) {
-      const match = key.match(/^w(\d)d(\d)_(.+)$/);
-      if (match) {
-        const w = match[1], d = match[2], name = match[3].replace(/_/g,' ');
-        allEntries.push({ week: w, day: d, name, weight: weights[key], key });
-      }
-    }
-  }
-
-  if (allEntries.length === 0) {
-    container.innerHTML = '<div class="history-empty">Todavía no hay pesos guardados.<br>Empezá a cargar tus pesos en la rutina.</div>';
-    return;
-  }
-
-  const grouped = {};
-  allEntries.forEach(e => {
-    if (!grouped[e.name]) grouped[e.name] = [];
-    grouped[e.name].push(e);
-  });
-
-  Object.entries(grouped).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([name, entries]) => {
-    const card = document.createElement('div');
-    card.className = 'history-card';
-    const tagsHtml = entries.map(e => `<div class="history-weight-tag">S${e.week}D${e.day} <span>${e.weight} kg</span></div>`).join('');
-    card.innerHTML = `<div class="history-ex-name">${name}</div><div class="history-weights">${tagsHtml}</div>`;
+// ── HISTORY ───────────────────────────────────────────────────
+function renderHistory(){
+  const container=document.getElementById('history-content');
+  container.innerHTML='';
+  const entries=Object.entries(weights).filter(([k,v])=>v>0);
+  if(!entries.length){container.innerHTML='<div class="history-empty">Todavía no hay pesos guardados.</div>';return}
+  entries.sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v])=>{
+    const name=k.replace(/^ex_/,'').replace(/_/g,' ');
+    const card=document.createElement('div');
+    card.className='history-card';
+    card.innerHTML=`<div class="history-ex-name">${name}</div><div class="history-weights"><div class="history-weight-tag">Último: <span>${v} kg</span></div></div>`;
     container.appendChild(card);
   });
 }
 
-function switchView(view) {
-  currentView = view;
-  document.getElementById('view-workout').classList.toggle('hidden', view !== 'workout');
-  document.getElementById('view-history').classList.toggle('hidden', view !== 'history');
-  document.getElementById('nav-workout').classList.toggle('active', view === 'workout');
-  document.getElementById('nav-history').classList.toggle('active', view === 'history');
-  if (view === 'history') renderHistory();
+// ── NAV ───────────────────────────────────────────────────────
+function switchView(v){
+  document.getElementById('view-workout').classList.toggle('hidden',v!=='workout');
+  document.getElementById('view-history').classList.toggle('hidden',v!=='history');
+  document.getElementById('nav-workout').classList.toggle('active',v==='workout');
+  document.getElementById('nav-history').classList.toggle('active',v==='history');
+  if(v==='history') renderHistory();
 }
 
-function openCycleModal() {
-  document.getElementById('cycle-modal').classList.add('open');
-}
-function closeCycleModal() {
-  document.getElementById('cycle-modal').classList.remove('open');
-}
-function setPhase(phase) {
-  currentPhase = phase;
-  savePhase();
-  renderPhase();
-  closeCycleModal();
-}
+document.getElementById('cycle-modal').addEventListener('click',function(e){if(e.target===this)closeCycleModal()});
 
-document.getElementById('cycle-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeCycleModal();
-});
-
-loadWeights();
-loadPhase();
-renderAll();
+// ── INIT ──────────────────────────────────────────────────────
+(async()=>{
+  await loadAll();
+  renderAll();
+  checkFirstRun();
+})();
 </script>
 </body>
 </html>
