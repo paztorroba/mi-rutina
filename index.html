@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Mi Rutina</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -26,25 +26,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cycle-pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:6px 11px;cursor:pointer;font-size:12px;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow)}
 .cycle-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
-/* COLLAPSIBLE SELECTOR */
-.selector-wrap{margin:12px 16px 0}
-.selector-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
-.selector-toggle-left{display:flex;align-items:center;gap:8px}
-.selector-toggle-label{font-size:13px;font-weight:600;color:var(--text)}
-.selector-toggle-sub{font-size:12px;color:var(--text2)}
-.selector-toggle-arrow{font-size:12px;color:var(--text3);transition:transform 0.2s}
-.selector-toggle-arrow.open{transform:rotate(180deg)}
-.selector-body{display:none;padding:10px 0 0}
-.selector-body.open{display:block}
-.selector-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.selector-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;margin-bottom:6px;grid-column:1/-1}
-.session-item{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
-.session-item.selected{border-color:var(--accent);background:var(--accent-bg)}
-.session-item-label{font-size:13px;font-weight:500;color:var(--text)}
-.session-item.selected .session-item-label{color:var(--accent-dark)}
-.session-checkbox{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg3);transition:all 0.15s}
-.session-item.done-session .session-checkbox{background:var(--green);border-color:var(--green)}
-.session-item.done-session .session-item-label{color:var(--text3);text-decoration:line-through}
 
 /* PROGRESS */
 .progress-section{padding:10px 16px 0}
@@ -223,7 +204,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* CICLO VIEW */
 .ciclo-section{padding:14px 16px 0}
-.ciclo-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.ciclo-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.cyc-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cyc-stat{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 11px}
+.cyc-stat-value{font-size:19px;font-weight:700;letter-spacing:-0.4px;color:var(--text)}
+.cyc-stat-value.late{color:var(--red)}
+.cyc-stat-value.today{color:var(--accent-dark)}
+.cyc-stat-label{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.3}
+.cyc-today-btn{width:100%;margin-top:11px;padding:11px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cyc-today-btn:active{background:var(--accent-dark)}
+.cyc-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.cyc-row:last-child{border-bottom:none}
+.cyc-row-date{font-size:13px;font-weight:500;color:var(--text)}
+.cyc-row-gap{font-size:11px;color:var(--text3);margin-top:1px}
+.cyc-row-del{background:transparent;border:none;color:var(--text3);font-size:17px;cursor:pointer;padding:3px 7px;-webkit-tap-highlight-color:transparent}
+.cyc-empty{font-size:13px;color:var(--text3);padding:6px 0}
 #ciclo-phase-detail-box .phase-detail{margin-bottom:12px}
 
 .pw-day-zones{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.3}
@@ -364,20 +359,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="session-header"><div class="session-title">Mi ciclo</div></div>
   <div class="ciclo-section">
     <div id="ciclo-phase-detail-box"></div>
+
+    <div class="ciclo-card" id="ciclo-stats-card">
+      <div class="cyc-stats" id="ciclo-stats"></div>
+      <button class="cyc-today-btn" onclick="registerPeriodToday()">Me vino hoy</button>
+    </div>
+
     <div class="ciclo-card">
       <div class="phase-options">
-        <div class="phase-opt folicular" onclick="setCicloPhase('folicular')"><div class="phase-opt-name">Folicular</div><div class="phase-opt-hint">Día 6–13</div></div>
-        <div class="phase-opt ovulacion" onclick="setCicloPhase('ovulacion')"><div class="phase-opt-name">Ovulación</div><div class="phase-opt-hint">Día 14</div></div>
-        <div class="phase-opt lutea" onclick="setCicloPhase('lutea')"><div class="phase-opt-name">Lútea</div><div class="phase-opt-hint">Día 15–28</div></div>
-        <div class="phase-opt menstrual" onclick="setCicloPhase('menstrual')"><div class="phase-opt-name">Menstrual</div><div class="phase-opt-hint">Día 1–5</div></div>
+        <div class="phase-opt folicular" onclick="setCicloPhase('folicular')"><div class="phase-opt-name">Folicular</div><div class="phase-opt-hint" data-phase="folicular"></div></div>
+        <div class="phase-opt ovulacion" onclick="setCicloPhase('ovulacion')"><div class="phase-opt-name">Ovulación</div><div class="phase-opt-hint" data-phase="ovulacion"></div></div>
+        <div class="phase-opt lutea" onclick="setCicloPhase('lutea')"><div class="phase-opt-name">Lútea</div><div class="phase-opt-hint" data-phase="lutea"></div></div>
+        <div class="phase-opt menstrual" onclick="setCicloPhase('menstrual')"><div class="phase-opt-name">Menstrual</div><div class="phase-opt-hint" data-phase="menstrual"></div></div>
       </div>
       <div class="modal-divider"></div>
-      <div class="modal-label">Inicio de último período</div>
+      <div class="modal-label">Registrar inicio de período</div>
       <div class="date-input-row">
         <input type="date" class="date-input" id="ciclo-date-input"/>
-        <button class="date-save-btn" onclick="saveCicloDate()">Guardar</button>
+        <button class="date-save-btn" onclick="saveCicloDate()">Agregar</button>
       </div>
       <div class="cycle-calc-result" id="ciclo-calc-result"></div>
+    </div>
+
+    <div class="ciclo-card" id="ciclo-history-card">
+      <div class="modal-label">Mis períodos</div>
+      <div id="ciclo-history"></div>
     </div>
   </div>
 </div>
@@ -404,13 +410,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="modal-sub">Calculada automáticamente · podés ajustarla manualmente</div>
     <div id="phase-detail-box"></div>
     <div class="phase-options">
-      <div class="phase-opt folicular" onclick="setPhaseManual('folicular')"><div class="phase-opt-name">Folicular</div><div class="phase-opt-hint">Día 6–13</div></div>
-      <div class="phase-opt ovulacion" onclick="setPhaseManual('ovulacion')"><div class="phase-opt-name">Ovulación</div><div class="phase-opt-hint">Día 14</div></div>
-      <div class="phase-opt lutea" onclick="setPhaseManual('lutea')"><div class="phase-opt-name">Lútea</div><div class="phase-opt-hint">Día 15–28</div></div>
-      <div class="phase-opt menstrual" onclick="setPhaseManual('menstrual')"><div class="phase-opt-name">Menstrual</div><div class="phase-opt-hint">Día 1–5</div></div>
+      <div class="phase-opt folicular" onclick="setPhaseManual('folicular')"><div class="phase-opt-name">Folicular</div><div class="phase-opt-hint" data-phase="folicular"></div></div>
+      <div class="phase-opt ovulacion" onclick="setPhaseManual('ovulacion')"><div class="phase-opt-name">Ovulación</div><div class="phase-opt-hint" data-phase="ovulacion"></div></div>
+      <div class="phase-opt lutea" onclick="setPhaseManual('lutea')"><div class="phase-opt-name">Lútea</div><div class="phase-opt-hint" data-phase="lutea"></div></div>
+      <div class="phase-opt menstrual" onclick="setPhaseManual('menstrual')"><div class="phase-opt-name">Menstrual</div><div class="phase-opt-hint" data-phase="menstrual"></div></div>
     </div>
     <div class="modal-divider"></div>
-    <div class="modal-label">Inicio de último período</div>
+    <div class="modal-label">Registrar inicio de período</div>
     <div class="date-input-row">
       <input type="date" class="date-input" id="cycle-date-input"/>
       <button class="date-save-btn" onclick="saveCycleDate()">Guardar</button>
@@ -429,6 +435,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <input type="date" class="date-input" id="first-run-date" style="width:100%;margin-bottom:4px"/>
     <button class="first-run-btn" onclick="saveFirstRunDate()">Listo</button>
     <button class="first-run-skip" onclick="skipFirstRun()">Ahora no</button>
+  </div>
+</div>
+
+<!-- AVISO DE PERÍODO ESPERADO -->
+<div class="first-run-overlay" id="period-due-modal">
+  <div class="first-run-modal">
+    <div class="first-run-title">¿Te vino? 🩸</div>
+    <div class="first-run-sub" id="period-due-sub"></div>
+    <div class="modal-label">Primer día del período</div>
+    <input type="date" class="date-input" id="period-due-date" style="width:100%;margin-bottom:4px"/>
+    <button class="first-run-btn" onclick="savePeriodDue()">Sí, registrar</button>
+    <button class="first-run-skip" onclick="snoozePeriodDue()">Todavía no · recordámelo mañana</button>
   </div>
 </div>
 
@@ -566,25 +584,25 @@ const TAGS={
 };
 const PHASE_DETAIL={
   folicular:{
-    name:'Fase Folicular · Día 6–13',
+    name:'Fase Folicular',
     desc:'Los niveles de estrógeno suben progresivamente. Tu energía, fuerza y recuperación mejoran día a día. Es el mejor momento para desafiarte y salir de la zona de confort.',
     advice:'💪 Recomendado: subir peso o repeticiones',
     cls:'folicular'
   },
   ovulacion:{
-    name:'Ovulación · Día 14',
+    name:'Ovulación',
     desc:'Pico máximo de estrógeno y testosterona. Tu fuerza y coordinación están en su punto más alto. Aprovechá para entrenar pesado y con máxima intensidad.',
     advice:'🔥 Recomendado: máxima carga, entrenar fuerte',
     cls:'ovulacion'
   },
   lutea:{
-    name:'Fase Lútea · Día 15–28',
+    name:'Fase Lútea',
     desc:'La progesterona sube y el cuerpo genera más calor. Podés sentir más fatiga o retención. Mantené la rutina pero escuchá cómo te sentís cada día.',
     advice:'🌙 Recomendado: mantener peso, no forzar',
     cls:'lutea'
   },
   menstrual:{
-    name:'Menstruación · Día 1–5',
+    name:'Menstruación',
     desc:'Los niveles hormonales están en su punto más bajo. Es normal sentir cansancio o molestias. El movimiento suave ayuda, pero priorizá el descanso si lo necesitás.',
     advice:'❤️ Recomendado: bajar peso o descansar si es necesario',
     cls:'menstrual'
@@ -600,7 +618,8 @@ function renderPhaseDetail(phase,targetId='phase-detail-box'){
   const d=PHASE_DETAIL[phase];
   const day=calcCycleDay();
   const dayHtml=day?`<div class="phase-detail-day">Día ${day}</div>`:'';
-  box.innerHTML=`<div class="phase-detail ${d.cls}">${dayHtml}<div class="phase-detail-name">${d.name}</div><div class="phase-detail-desc">${d.desc}</div><div class="phase-detail-advice">${d.advice}</div></div>`;
+  const rango=phaseRange(phase);
+  box.innerHTML=`<div class="phase-detail ${d.cls}">${dayHtml}<div class="phase-detail-name">${d.name}${rango?' · '+rango:''}</div><div class="phase-detail-desc">${d.desc}</div><div class="phase-detail-advice">${d.advice}</div></div>`;
 }
 
 // ── ROUTINE ───────────────────────────────────────────────────
@@ -630,6 +649,9 @@ let weights={},checks={},doneSessions={},timers={};
 let customSeries={},customReps={},sessionOrders={};
 let weightHistory={},extraExercises=[];
 let cycleStartDate=null,manualPhase=null,syncTimeout=null;
+// cycleStarts: historial de inicios de período (ISO 'YYYY-MM-DD', ascendente). De acá sale
+// el largo real del ciclo. cycleStartDate se mantiene como el último, por compatibilidad.
+let cycleStarts=[],periodPromptedOn=null;
 
 function sk(n){return 'ex_'+n.replace(/\s+/g,'_')}
 function ck(n,w,d){return 'chk_w'+w+'d'+d+'_'+n.replace(/\s+/g,'_')}
@@ -640,7 +662,7 @@ function sw(n,v){
   if(v>0){
     const key=sk(n);
     if(!weightHistory[key])weightHistory[key]=[];
-    const today=new Date().toISOString().split('T')[0];
+    const today=todayISO();   // fecha LOCAL: con toISOString, entrenar de noche quedaba registrado al día siguiente
     const h=weightHistory[key];
     if(h.length&&h[h.length-1].d===today) h[h.length-1].v=v;
     else h.push({d:today,v});
@@ -653,8 +675,7 @@ function isSessDone(w,d){return !!doneSessions[sessKey(w,d)]}
 function toggleSessDone(w,d){
   doneSessions[sessKey(w,d)]=!isSessDone(w,d);
   persistAll();
-  renderSelectorGrid();
-  updateSelectorLabel();
+  updateSessionLabel();
   renderProgressView();
 }
 
@@ -673,30 +694,137 @@ function addLongPress(el, cb, ms=600){
 }
 
 // ── PERSIST ───────────────────────────────────────────────────
-function persistAll(){
-  const snapshot=JSON.stringify({weights,checks,doneSessions,cycleStartDate,manualPhase,customSeries,customReps,sessionOrders,weightHistory,extraExercises});
-  try{localStorage.setItem('gym_data',snapshot)}catch(e){}
+// Cada cambio guarda en el teléfono (localStorage) y luego sube a Google Sheets.
+// Se compara siempre por fecha de modificación (updatedAt): gana el dato más nuevo,
+// así una copia vieja de Sheets nunca pisa lo que hiciste hoy.
+const LS_KEY='gym_data', LS_DIRTY='gym_dirty';
+let updatedAt=0, syncing=false, syncQueued=false, retryTimer=null, pendingRemote=null;
+
+function buildSnapshot(){
+  return {weights,checks,doneSessions,cycleStartDate,cycleStarts,periodPromptedOn,manualPhase,customSeries,customReps,sessionOrders,weightHistory,extraExercises,updatedAt};
+}
+function applySnapshot(s){
+  weights=s.weights||{};checks=s.checks||{};doneSessions=s.doneSessions||{};
+  cycleStartDate=s.cycleStartDate||null;manualPhase=s.manualPhase||null;
+  customSeries=s.customSeries||{};customReps=s.customReps||{};sessionOrders=s.sessionOrders||{};
+  weightHistory=s.weightHistory||{};extraExercises=s.extraExercises||[];
+  periodPromptedOn=s.periodPromptedOn||null;
+  // Datos viejos solo tenían cycleStartDate: lo convertimos en el primer elemento del historial
+  cycleStarts=Array.isArray(s.cycleStarts)?s.cycleStarts.slice():[];
+  if(!cycleStarts.length&&cycleStartDate) cycleStarts=[cycleStartDate];
+  normalizeCycleStarts();
+  updatedAt=+s.updatedAt||0;
+}
+function hasData(s){
+  if(!s) return false;
+  return ['weights','checks','doneSessions','customSeries','customReps','weightHistory'].some(k=>s[k]&&Object.keys(s[k]).length)
+    || !!s.cycleStartDate || (s.cycleStarts&&s.cycleStarts.length>0) || (s.extraExercises&&s.extraExercises.length>0);
+}
+function saveLocal(snap){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(snap));return true}catch(e){return false}
+}
+// minTs: marca de tiempo mínima a superar. Sirve para forzar que este dispositivo gane
+// aunque el otro tenga el reloj adelantado (si no, el backend rechaza para siempre).
+function persistAll(minTs){
+  updatedAt=Math.max(Date.now(),(+minTs||0)+1);
+  saveLocal(buildSnapshot());
+  try{localStorage.setItem(LS_DIRTY,'1')}catch(e){}
+  setSyncStatus('pending');
   clearTimeout(syncTimeout);
-  syncTimeout=setTimeout(()=>syncToSheets(JSON.parse(snapshot)),1500);
+  syncTimeout=setTimeout(syncToSheets,1200);
 }
 function setSyncStatus(s){
   const el=document.getElementById('sync-status');if(!el)return;
-  if(s==='saving'){el.textContent='Guardando...';el.style.color='#999'}
-  else if(s==='ok'){el.textContent='✓';el.style.color='var(--green)';setTimeout(()=>{el.textContent=''},2500)}
-  else if(s==='err'){el.textContent='⚠ local';el.style.color='var(--amber)'}
+  el.onclick=(s==='err')?()=>syncToSheets():null;
+  el.style.cursor=(s==='err')?'pointer':'';
+  el.onclick=(s==='conflict')?resolveConflict:(s==='err')?()=>syncToSheets():null;
+  el.style.cursor=(s==='err'||s==='conflict')?'pointer':'';
+  if(s==='pending'||s==='saving'){el.textContent='Guardando…';el.style.color='var(--text2)'}
+  else if(s==='ok'){el.textContent='✓ Guardado';el.style.color='var(--accent-dark)';setTimeout(()=>{if(el.textContent==='✓ Guardado')el.textContent=''},2500)}
+  else if(s==='err'){el.textContent='⚠ Sin sincronizar · tocá para reintentar';el.style.color='var(--amber)'}
+  else if(s==='conflict'){el.textContent='⚠ Otro dispositivo · tocá para resolver';el.style.color='var(--amber)'}
 }
 
-function syncToSheets(data){
+// Sube el estado actual y VERIFICA leyendo de vuelta (el POST no-cors no devuelve respuesta,
+// por eso antes mostraba "✓" aunque no se hubiera guardado nada).
+//
+// La verificación es por IGUALDAD exacta de updatedAt, no por ">=": el backend rechaza
+// (sin guardar) un envío más viejo que lo que ya tiene, y en ese caso el dato de vuelta es
+// MÁS NUEVO que el nuestro. Con ">=" eso se leía como éxito y se perdía el entrenamiento.
+async function syncToSheets(){
+  if(syncing){syncQueued=true;return}
+  syncing=true;syncQueued=false;
+  clearTimeout(retryTimer);
   setSyncStatus('saving');
-  const blob=new Blob([JSON.stringify(data)],{type:'text/plain'});
-  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',body:blob})
-    .then(()=>setSyncStatus('ok'))
-    .catch(()=>setSyncStatus('err'));
+  const snap=buildSnapshot();
+  let ok=false,conflict=false;
+  try{
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',body:new Blob([JSON.stringify(snap)],{type:'text/plain'})});
+    const remote=await loadFromSheets();
+    const rT=remote?(+remote.updatedAt||0):-1;
+    ok=(rT===snap.updatedAt);
+    // El servidor tiene algo más nuevo: nuestro envío fue rechazado. No es un error de red,
+    // reintentar solo repetiría el rechazo — lo decide quien está usando la app.
+    if(!ok&&rT>snap.updatedAt){conflict=true;pendingRemote=remote}
+  }catch(e){ok=false}
+  syncing=false;
+  if(ok&&snap.updatedAt===updatedAt&&!syncQueued){
+    try{localStorage.removeItem(LS_DIRTY)}catch(e){}
+    setSyncStatus('ok');
+  } else if(ok||syncQueued){
+    syncToSheets(); // hubo cambios mientras subía
+  } else if(conflict){
+    setSyncStatus('conflict');
+  } else {
+    setSyncStatus('err');
+    retryTimer=setTimeout(syncToSheets,30000);
+  }
 }
+
+// Conflicto: este teléfono y Sheets tienen versiones distintas y no hay forma de fusionarlas
+// (se guarda todo el estado junto). Preguntamos en vez de elegir por ella y perder datos.
+function resolveConflict(){
+  if(!pendingRemote) return syncToSheets();
+  const quedarse=confirm(
+    'Hay datos más nuevos guardados desde otro dispositivo.\n\n'+
+    'Aceptar: conservar lo de ESTE teléfono (pisa lo del otro).\n'+
+    'Cancelar: traer lo del otro dispositivo (descarta lo de este teléfono).'
+  );
+  if(quedarse){
+    const rT=+pendingRemote.updatedAt||0;
+    pendingRemote=null;
+    persistAll(rT);         // nos ponemos por encima del remoto para que el backend lo acepte
+    clearTimeout(syncTimeout);
+    syncToSheets();         // sin esperar el debounce: es una acción explícita
+  } else {
+    applySnapshot(pendingRemote);
+    pendingRemote=null;
+    saveLocal(buildSnapshot());
+    try{localStorage.removeItem(LS_DIRTY)}catch(e){}
+    setSyncStatus('ok');
+    rerenderCurrentView();
+  }
+}
+
+// Envío rápido al cerrar/minimizar la app (sin esperar verificación)
+function flushOnHide(){
+  if(localStorage.getItem(LS_DIRTY)!=='1') return;
+  try{
+    const body=JSON.stringify(buildSnapshot());
+    fetch(SHEETS_URL,{method:'POST',mode:'no-cors',keepalive:body.length<60000,body:new Blob([body],{type:'text/plain'})}).catch(()=>{});
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){flushOnHide();return}
+  if(localStorage.getItem(LS_DIRTY)==='1') syncToSheets();
+  checkPeriodDue();   // si dejaste la app abierta varios días, al volver igual avisa
+});
+window.addEventListener('pagehide',flushOnHide);
+window.addEventListener('online',()=>{if(localStorage.getItem(LS_DIRTY)==='1')syncToSheets()});
 
 function loadFromSheets(){
   return new Promise((resolve)=>{
-    const cbName='_gjcb'+Date.now();
+    const cbName='_gjcb'+Date.now()+Math.floor(Math.random()*1e4);
     const script=document.createElement('script');
     let settled=false;
     const finish=(data)=>{
@@ -709,53 +837,119 @@ function loadFromSheets(){
     };
     const timeout=setTimeout(()=>finish(null),8000);
     window[cbName]=finish;
-    script.src=SHEETS_URL+'?callback='+cbName;
+    script.onerror=()=>finish(null);
+    script.src=SHEETS_URL+'?callback='+cbName+'&t='+Date.now();
     document.head.appendChild(script);
   });
 }
 
-async function loadAll(){
-  // 1. Load from localStorage first (instant)
-  try{
-    const local=JSON.parse(localStorage.getItem('gym_data')||'{}');
-    weights=local.weights||{};checks=local.checks||{};doneSessions=local.doneSessions||{};
-    cycleStartDate=local.cycleStartDate||null;manualPhase=local.manualPhase||null;
-    customSeries=local.customSeries||{};customReps=local.customReps||{};sessionOrders=local.sessionOrders||{};
-    weightHistory=local.weightHistory||{};extraExercises=local.extraExercises||[];
-  }catch(e){weights={};checks={};doneSessions={}}
+// 1. Lo guardado en este teléfono. Es síncrono a propósito: la app tiene que poder
+//    dibujarse y usarse sin esperar un segundo a la red.
+function loadLocal(){
+  let local=null;
+  try{local=JSON.parse(localStorage.getItem(LS_KEY)||'null')}catch(e){}
+  if(local) applySnapshot(local);
+  // Pedir al navegador que no borre los datos locales por falta de uso
+  try{if(navigator.storage&&navigator.storage.persist) navigator.storage.persist()}catch(e){}
+}
 
-  // 2. Try loading from Sheets via JSONP
-  try{
-    const remote=await loadFromSheets();
-    if(remote&&typeof remote==='object'){
-      if(remote.weights)        weights=remote.weights;
-      if(remote.checks)         checks=remote.checks;
-      if(remote.doneSessions)   doneSessions=remote.doneSessions;
-      if(remote.cycleStartDate) cycleStartDate=remote.cycleStartDate;
-      if(remote.manualPhase)    manualPhase=remote.manualPhase;
-      if(remote.customSeries)   customSeries=remote.customSeries;
-      if(remote.customReps)     customReps=remote.customReps;
-      if(remote.sessionOrders)  sessionOrders=remote.sessionOrders;
-      if(remote.weightHistory)  weightHistory=remote.weightHistory;
-      if(remote.extraExercises) extraExercises=remote.extraExercises;
-      try{localStorage.setItem('gym_data',JSON.stringify({weights,checks,doneSessions,cycleStartDate,manualPhase,customSeries,customReps,sessionOrders,weightHistory,extraExercises}))}catch(e){}
-    }
-  }catch(e){}
+// 2. Comparar con Google Sheets: gana lo más reciente. Corre en segundo plano, después
+//    del primer dibujado, porque puede tardar hasta 8 segundos en contestar.
+async function reconcileWithSheets(){
+  const remote=await loadFromSheets();
+  const remoteOk=remote&&typeof remote==='object'&&!remote.error&&remote.ok!==false;
+  if(!remoteOk){
+    if(localStorage.getItem(LS_DIRTY)==='1') syncToSheets();
+    else if(hasData(buildSnapshot())) setSyncStatus('err');
+    return;
+  }
+  // Comparamos contra el estado ACTUAL (updatedAt / buildSnapshot), no contra la foto que
+  // leímos de localStorage al arrancar: la app ya es usable mientras esto viaja, y lo que
+  // hayas tocado en el medio tiene que ganarle a una respuesta más vieja.
+  const localNow=buildSnapshot();
+  const rT=+remote.updatedAt||0, lT=updatedAt;
+  if(rT>lT){
+    applySnapshot(remote);              // Sheets tiene algo más nuevo (p. ej. otro dispositivo)
+    saveLocal(buildSnapshot());
+    rerenderCurrentView();
+  } else if(hasData(localNow)&&(lT>rT||localStorage.getItem(LS_DIRTY)==='1'||rT===0)){
+    if(!updatedAt){updatedAt=Date.now();saveLocal(buildSnapshot())}
+    syncToSheets();                     // lo local es más nuevo (o Sheets está vacío/viejo): subirlo
+  } else if(!hasData(localNow)&&hasData(remote)){
+    applySnapshot(remote);              // teléfono vacío: restaurar desde Sheets
+    saveLocal(buildSnapshot());
+    rerenderCurrentView();
+  }
 }
 
 // ── CYCLE ─────────────────────────────────────────────────────
-function calcPhase(){
-  if(cycleStartDate){
-    const diff=Math.floor((new Date()-new Date(cycleStartDate))/(864e5));
-    const d=((diff%28)+28)%28+1;
-    return d<=5?'menstrual':d<=13?'folicular':d===14?'ovulacion':'lutea';
-  }
-  return manualPhase;
+// El largo del ciclo sale del promedio de tus últimos períodos, no de un 28 fijo.
+// La ovulación se cuenta hacia ATRÁS desde el próximo período: la fase lútea dura
+// ~14 días casi siempre, mientras que la folicular es la que se estira o se acorta.
+// Por eso en un ciclo de 31 días ovulás el día 17, no el 14.
+const DEFAULT_CYCLE=28, LUTEAL_DAYS=14, MIN_CYCLE=21, MAX_CYCLE=40, PERIOD_DAYS=5, AVG_OVER=6;
+
+// Fechas al mediodía local: evita que un cambio de horario corra un día entero.
+function parseDay(s){const p=String(s).split('-').map(Number);return new Date(p[0],p[1]-1,p[2],12,0,0)}
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function daysBetween(a,b){return Math.round((parseDay(b)-parseDay(a))/864e5)}
+function addDays(iso,n){const d=parseDay(iso);d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+// No alcanza con el formato: '2026-13-45' lo cumple y rompería todo el cálculo.
+// El estado viaja por una hoja de cálculo editable a mano, así que validamos la fecha real.
+function isValidDay(s){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(s||'')) return false;
+  const p=s.split('-').map(Number), dt=new Date(p[0],p[1]-1,p[2],12,0,0);
+  return dt.getFullYear()===p[0]&&dt.getMonth()===p[1]-1&&dt.getDate()===p[2];
 }
+function normalizeCycleStarts(){
+  cycleStarts=[...new Set(cycleStarts.filter(isValidDay))].sort();
+  cycleStartDate=cycleStarts.length?cycleStarts[cycleStarts.length-1]
+                :(isValidDay(cycleStartDate)?cycleStartDate:null);
+}
+function lastStart(){return cycleStarts.length?cycleStarts[cycleStarts.length-1]:cycleStartDate}
+
+// Promedio de los últimos AVG_OVER ciclos. Se descartan los largos imposibles (una fecha
+// mal tipeada, o un hueco porque no registraste un período) para que no ensucien el promedio.
+function cycleLengths(){
+  const out=[];
+  for(let i=1;i<cycleStarts.length;i++){
+    const len=daysBetween(cycleStarts[i-1],cycleStarts[i]);
+    if(len>=MIN_CYCLE&&len<=MAX_CYCLE) out.push(len);
+  }
+  return out;
+}
+function getCycleLength(){
+  const lens=cycleLengths().slice(-AVG_OVER);
+  if(!lens.length) return DEFAULT_CYCLE;
+  return Math.round(lens.reduce((a,b)=>a+b,0)/lens.length);
+}
+function ovulationDay(len=getCycleLength()){return Math.max(PERIOD_DAYS+2,len-LUTEAL_DAYS)}
+
+// Día del ciclo SIN dar la vuelta: si estás en el día 31 de un ciclo de 28, querés
+// enterarte de que tenés 3 días de atraso, no que "es el día 3".
 function calcCycleDay(){
-  if(!cycleStartDate) return null;
-  const diff=Math.floor((new Date()-new Date(cycleStartDate))/(864e5));
-  return ((diff%28)+28)%28+1;
+  const start=lastStart();
+  if(!start) return null;
+  const d=daysBetween(start,todayISO())+1;
+  return d>0?d:null;
+}
+function nextExpected(){const s=lastStart();return s?addDays(s,getCycleLength()):null}
+function daysUntilNext(){const n=nextExpected();return n?daysBetween(todayISO(),n):null}
+
+function calcPhase(){
+  const day=calcCycleDay();
+  if(day==null) return manualPhase;
+  const len=getCycleLength(), ov=ovulationDay(len);
+  if(day<=PERIOD_DAYS) return 'menstrual';
+  if(day<ov) return 'folicular';
+  if(day===ov) return 'ovulacion';
+  return 'lutea';
+}
+// Rango de días de cada fase, adaptado a TU largo de ciclo (para mostrar en la UI)
+function phaseRange(p,len=getCycleLength()){
+  const ov=ovulationDay(len);
+  return {menstrual:'Día 1–'+PERIOD_DAYS,folicular:'Día '+(PERIOD_DAYS+1)+'–'+(ov-1),ovulacion:'Día '+ov,lutea:'Día '+(ov+1)+'–'+len}[p]||'';
 }
 function phaseLabel(p){return{folicular:'Fase folicular · más energía 💪',ovulacion:'Ovulación · pico de fuerza 🔥',lutea:'Fase lútea · moderá si es necesario 🌙',menstrual:'Menstruación · escuchá tu cuerpo ❤️'}[p]||''}
 function phaseName(p){return{folicular:'Folicular',ovulacion:'Ovulación',lutea:'Lútea',menstrual:'Menstrual'}[p]||'Ciclo'}
@@ -780,9 +974,14 @@ function renderPhase(){
     el.classList.remove('selected');
     if(phase&&el.classList.contains(phase)) el.classList.add('selected');
   });
+  // Los rangos de días se recalculan con tu largo de ciclo real
+  const len=getCycleLength();
+  document.querySelectorAll('.phase-opt-hint[data-phase]').forEach(el=>{
+    el.textContent=phaseRange(el.dataset.phase,len);
+  });
 }
 function openCycleModal(){
-  if(cycleStartDate) document.getElementById('cycle-date-input').value=cycleStartDate;
+  document.getElementById('cycle-date-input').value=todayISO();
   updateCycleCalcResult();
   renderPhaseDetail(calcPhase());
   document.getElementById('cycle-modal').classList.add('open');
@@ -792,11 +991,16 @@ function closeCycleModal(){document.getElementById('cycle-modal').classList.remo
 function updateCalcResult(elId){
   const el=document.getElementById(elId);
   if(!el) return;
-  if(!cycleStartDate){el.style.display='none';return}
-  const diff=Math.floor((new Date()-new Date(cycleStartDate))/(864e5));
-  const d=((diff%28)+28)%28+1;
+  const d=calcCycleDay();
+  if(d==null){el.style.display='none';return}
+  const falta=daysUntilNext();
+  let cuando;
+  if(falta>1)       cuando='faltan '+falta+' días';
+  else if(falta===1)cuando='falta 1 día';
+  else if(falta===0)cuando='te toca hoy';
+  else              cuando=(-falta)+(falta===-1?' día de atraso':' días de atraso');
   el.style.display='block';
-  el.textContent='Día '+d+' del ciclo · '+phaseName(calcPhase());
+  el.textContent='Día '+d+' · '+phaseName(calcPhase())+' · ciclo de '+getCycleLength()+' días · '+cuando;
 }
 function updateCycleCalcResult(){updateCalcResult('cycle-calc-result')}
 function updateCicloCalcResult(){updateCalcResult('ciclo-calc-result')}
@@ -805,83 +1009,85 @@ function savePhase(p,afterSet){manualPhase=p;persistAll();renderPhase();afterSet
 function setPhaseManual(p){savePhase(p,closeCycleModal)}
 function setCicloPhase(p){savePhase(p,renderCicloView)}
 
+// Registrar el inicio de un período. Suma al historial en vez de pisar la fecha anterior:
+// así el largo del ciclo se vuelve cada vez más preciso en lugar de desfasarse.
+function registerPeriodStart(iso){
+  if(!isValidDay(iso)) return false;
+  if(daysBetween(iso,todayISO())<0) return false;        // no aceptamos fechas futuras
+  if(!cycleStarts.includes(iso)) cycleStarts.push(iso);
+  normalizeCycleStarts();
+  manualPhase=null;
+  periodPromptedOn=null;                                  // arranca un ciclo nuevo: se puede volver a preguntar
+  persistAll();
+  renderPhase();
+  return true;
+}
+function deletePeriodStart(iso){
+  cycleStarts=cycleStarts.filter(d=>d!==iso);
+  if(!cycleStarts.length) cycleStartDate=null;
+  normalizeCycleStarts();
+  persistAll();renderPhase();renderCicloView();
+}
+function registerPeriodToday(){
+  registerPeriodStart(todayISO());
+  renderCicloView();
+}
+
 function saveCycleStartDate(inputId,afterSave){
   const val=document.getElementById(inputId).value;
-  if(!val) return;
-  cycleStartDate=val;manualPhase=null;persistAll();renderPhase();afterSave();
+  if(!registerPeriodStart(val)) return;
+  afterSave();
 }
 function saveCycleDate(){saveCycleStartDate('cycle-date-input',()=>{updateCycleCalcResult();closeCycleModal()})}
 function saveCicloDate(){saveCycleStartDate('ciclo-date-input',renderCicloView)}
 function checkFirstRun(){
-  if(!cycleStartDate&&!manualPhase){
+  if(!lastStart()&&!manualPhase){
     document.getElementById('first-run-modal').classList.add('open');
-    const d=new Date();d.setDate(d.getDate()-3);
-    document.getElementById('first-run-date').value=d.toISOString().split('T')[0];
+    document.getElementById('first-run-date').value=addDays(todayISO(),-3);
   }
 }
 function saveFirstRunDate(){
-  const val=document.getElementById('first-run-date').value;
-  if(val){cycleStartDate=val;manualPhase=null;persistAll();renderPhase()}
+  registerPeriodStart(document.getElementById('first-run-date').value);
   document.getElementById('first-run-modal').classList.remove('open');
 }
 function skipFirstRun(){document.getElementById('first-run-modal').classList.remove('open')}
 
-// ── SELECTOR ──────────────────────────────────────────────────
-function toggleSelector(){
-  selectorOpen=!selectorOpen;
-  document.getElementById('selector-body').classList.toggle('open',selectorOpen);
-  document.getElementById('selector-arrow').classList.toggle('open',selectorOpen);
+// ── AVISO AUTOMÁTICO DE PERÍODO ───────────────────────────────
+// Aparece cuando llegás al día esperado según TU promedio (o lo pasaste). Pregunta
+// una sola vez por día: si decís "todavía no", vuelve mañana, no en el próximo toque.
+function checkPeriodDue(){
+  if(!lastStart()) return;                                  // sin historial lo maneja checkFirstRun
+  if(document.getElementById('first-run-modal').classList.contains('open')) return;
+  if(periodPromptedOn===todayISO()) return;                 // ya preguntamos hoy
+  const falta=daysUntilNext();
+  if(falta===null||falta>0) return;                         // todavía no toca
+  const atraso=-falta, len=getCycleLength();
+  const basadoEn=cycleLengths().length
+    ? 'tu promedio de '+len+' días'
+    : 'un ciclo estimado de '+len+' días';
+  document.getElementById('period-due-sub').textContent=
+    (atraso===0 ? 'Según '+basadoEn+', hoy es el día en que te tocaría.'
+                : 'Según '+basadoEn+', te tocaba hace '+atraso+(atraso===1?' día':' días')+'.')
+    +' Si ya empezó, registralo y ajusto el cálculo.';
+  document.getElementById('period-due-date').value=todayISO();
+  document.getElementById('period-due-modal').classList.add('open');
 }
-function updateSelectorLabel(){
+function savePeriodDue(){
+  const val=document.getElementById('period-due-date').value;
+  if(!registerPeriodStart(val)) return;                     // fecha inválida o futura: no cerramos
+  document.getElementById('period-due-modal').classList.remove('open');
+  rerenderCurrentView();
+}
+function snoozePeriodDue(){
+  periodPromptedOn=todayISO();
+  persistAll();
+  document.getElementById('period-due-modal').classList.remove('open');
+}
+
+// ── SELECTOR ──────────────────────────────────────────────────
+function updateSessionLabel(){
   const el=document.getElementById('workout-session-label');
   if(el) el.textContent='Semana '+cW+' · Entrenamiento '+cD;
-}
-function buildSelectorGrid(){
-  const cont=document.getElementById('selector-grid-container');
-  cont.innerHTML='';
-  for(let w=1;w<=8;w++){
-    const wLabel=document.createElement('div');
-    wLabel.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;margin:10px 0 6px;padding:0 2px';
-    wLabel.textContent='Semana '+w;
-    cont.appendChild(wLabel);
-    const row=document.createElement('div');
-    row.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:4px';
-    for(let d=1;d<=2;d++){
-      const item=document.createElement('div');
-      item.className='session-item';
-      item.dataset.week=w;
-      item.dataset.day=d;
-      item.innerHTML=`<span class="session-item-label">Día ${d}</span><div class="session-checkbox"></div>`;
-      item.addEventListener('click',(e)=>{
-        if(e.target.closest('.session-checkbox')){
-          toggleSessDone(w,d);
-        } else {
-          cW=w;cD=d;
-          selectorOpen=false;
-          document.getElementById('selector-body').classList.remove('open');
-          document.getElementById('selector-arrow').classList.remove('open');
-          switchView('workout');
-        }
-      });
-      row.appendChild(item);
-    }
-    cont.appendChild(row);
-  }
-}
-function renderSelectorGrid(){
-  const cont=document.getElementById('selector-grid-container');
-  if(!cont) return;
-  if(!cont.querySelector('[data-week]')) buildSelectorGrid();
-  for(let w=1;w<=8;w++){
-    for(let d=1;d<=2;d++){
-      const item=cont.querySelector(`[data-week="${w}"][data-day="${d}"]`);
-      if(!item) continue;
-      const done=isSessDone(w,d);
-      const sel=(w===cW&&d===cD);
-      item.className='session-item'+(sel?' selected':'')+(done?' done-session':'');
-      item.querySelector('.session-checkbox').innerHTML=done?'<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
-    }
-  }
 }
 
 // ── PROGRESS ──────────────────────────────────────────────────
@@ -897,22 +1103,51 @@ function renderProgress(){
 
 // ── TIMER ─────────────────────────────────────────────────────
 function timerKey(n){return cW+'_'+cD+'_'+n}
+
+// Aviso al terminar: en plancha estás mirando el piso, no la pantalla.
+let audioCtx=null;
+function unlockAudio(){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+  }catch(e){audioCtx=null}
+}
+function notifyTimerDone(){
+  try{if(navigator.vibrate) navigator.vibrate([200,100,200,100,300])}catch(e){}
+  if(!audioCtx) return;
+  try{
+    // Tres pitidos cortos
+    [0,0.22,0.44].forEach(offset=>{
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      const t0=audioCtx.currentTime+offset;
+      osc.frequency.value=880;
+      gain.gain.setValueAtTime(0.0001,t0);
+      gain.gain.exponentialRampToValueAtTime(0.35,t0+0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001,t0+0.16);
+      osc.connect(gain);gain.connect(audioCtx.destination);
+      osc.start(t0);osc.stop(t0+0.18);
+    });
+  }catch(e){}
+}
+
 function startTimer(n,k=timerKey(n)){
   if(timers[k]&&timers[k].interval)return;
-  if(!timers[k])timers[k]={elapsed:0,interval:null,preset:45};
+  unlockAudio();   // el navegador solo deja sonar si viene de un toque; este lo es
+  if(!timers[k])timers[k]={elapsed:0,interval:null,preset:45,notified:false};
   if(timers[k].elapsed>=timers[k].preset)resetTimer(n,k);
+  // El contador NO depende de que el elemento siga en pantalla: al volver a la vista de
+  // rutina se redibuja todo y, con el chequeo del DOM, el timer moría sin avisar.
   timers[k].interval=setInterval(()=>{
-    if(!document.getElementById('td-'+CSS.escape(n))){clearInterval(timers[k].interval);timers[k].interval=null;return}
     timers[k].elapsed++;
     updateTimerDisplay(n,k);
   },1000);
   updateTimerBtns(n,k);
 }
 function pauseTimer(n,k=timerKey(n)){if(!timers[k])return;clearInterval(timers[k].interval);timers[k].interval=null;updateTimerBtns(n,k)}
-function resetTimer(n,k=timerKey(n)){if(timers[k])clearInterval(timers[k].interval);timers[k]={elapsed:0,interval:null,preset:timers[k]?timers[k].preset:45};updateTimerDisplay(n,k);updateTimerBtns(n,k)}
+function resetTimer(n,k=timerKey(n)){if(timers[k])clearInterval(timers[k].interval);timers[k]={elapsed:0,interval:null,preset:timers[k]?timers[k].preset:45,notified:false};updateTimerDisplay(n,k);updateTimerBtns(n,k)}
 function setPreset(n,secs){
   const k=timerKey(n);
-  if(!timers[k]) timers[k]={elapsed:0,interval:null,preset:secs};
+  if(!timers[k]) timers[k]={elapsed:0,interval:null,preset:secs,notified:false};
   else timers[k].preset=secs;
   resetTimer(n,k);
   const td=document.getElementById('td-'+CSS.escape(n));
@@ -924,7 +1159,16 @@ function setPreset(n,secs){
   });
 }
 function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m>0?(sec>0?m+'m '+String(sec).padStart(2,'0')+'s':m+'m'):String(sec).padStart(2,'0')+'s'}
-function updateTimerDisplay(n,k=timerKey(n)){const t=timers[k]||{elapsed:0,preset:45};const el=document.getElementById('td-'+CSS.escape(n));if(!el)return;const rem=Math.max(0,t.preset-t.elapsed);if(t.elapsed>=t.preset){el.textContent='¡Listo!';el.className='timer-display done-t';pauseTimer(n,k)}else{el.textContent=fmtTime(rem);el.className='timer-display'+(t.interval?' running':'')}}
+function updateTimerDisplay(n,k=timerKey(n)){
+  const t=timers[k]||{elapsed:0,preset:45};
+  const done=t.elapsed>=t.preset;
+  if(done&&!t.notified){t.notified=true;notifyTimerDone()}   // una sola vez por vuelta
+  if(done) pauseTimer(n,k);
+  const el=document.getElementById('td-'+CSS.escape(n));
+  if(!el) return;                                            // corriendo en otra vista: seguí contando igual
+  if(done){el.textContent='¡Listo!';el.className='timer-display done-t'}
+  else{el.textContent=fmtTime(Math.max(0,t.preset-t.elapsed));el.className='timer-display'+(t.interval?' running':'')}
+}
 function updateTimerBtns(n,k=timerKey(n)){const running=timers[k]&&timers[k].interval;const btn=document.getElementById('tbstart-'+CSS.escape(n));if(btn){btn.textContent=running?'Pausar':'Iniciar';btn.className='timer-btn'+(running?' active':'')}}
 
 // ── UTILS ─────────────────────────────────────────────────────
@@ -1083,7 +1327,7 @@ function renderRoutine(){
 
     if(ex.timer){
       const k=timerKey(ex.n);
-      if(!timers[k])timers[k]={elapsed:0,interval:null,preset:45};
+      if(!timers[k])timers[k]={elapsed:0,interval:null,preset:45,notified:false};
       const t=timers[k];
       const rem=Math.max(0,t.preset-t.elapsed);
       const isDoneT=t.elapsed>=t.preset;
@@ -1130,6 +1374,12 @@ function fmtDate(d){
   const mo=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   return `${parseInt(day)} ${mo[parseInt(m)-1]}`;
 }
+// Igual que fmtDate pero agrega el año cuando no es el actual
+function fmtDateLong(d){
+  if(!d)return'';
+  const y=d.split('-')[0];
+  return fmtDate(d)+(y===String(new Date().getFullYear())?'':' '+y);
+}
 
 function openHistDropdown(){
   filterHistDropdown(document.getElementById('hist-search-input').value||'');
@@ -1168,22 +1418,22 @@ function renderWeightChart(name){
   const W=containerW-16;
   const H=150;
   const pad={t:20,r:14,b:28,l:36};
-  const cW=W-pad.l-pad.r;
-  const cH=H-pad.t-pad.b;
+  const plotW=W-pad.l-pad.r;   // ancho del área de dibujo (NO confundir con cW = semana actual)
+  const plotH=H-pad.t-pad.b;
   const vals=hist.map(p=>p.v);
   const minV=Math.min(...vals),maxV=Math.max(...vals);
   const span=maxV-minV||maxV*0.2||10;
   const yLo=minV-span*0.2,yHi=maxV+span*0.2;
   const n=hist.length;
-  const xOf=i=>pad.l+(n===1?cW/2:(i/(n-1))*cW);
-  const yOf=v=>pad.t+(1-(v-yLo)/(yHi-yLo))*cH;
+  const xOf=i=>pad.l+(n===1?plotW/2:(i/(n-1))*plotW);
+  const yOf=v=>pad.t+(1-(v-yLo)/(yHi-yLo))*plotH;
   const pts=hist.map((p,i)=>`${xOf(i).toFixed(1)},${yOf(p.v).toFixed(1)}`).join(' ');
-  const areaPts=`${xOf(0).toFixed(1)},${(pad.t+cH).toFixed(1)} ${pts} ${xOf(n-1).toFixed(1)},${(pad.t+cH).toFixed(1)}`;
+  const areaPts=`${xOf(0).toFixed(1)},${(pad.t+plotH).toFixed(1)} ${pts} ${xOf(n-1).toFixed(1)},${(pad.t+plotH).toFixed(1)}`;
   let yLines='';
   [0.15,0.5,0.85].forEach(f=>{
     const v=yLo+(yHi-yLo)*f;
     const y=yOf(v).toFixed(1);
-    yLines+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+cW}" y2="${y}" stroke="var(--border)" stroke-width="0.5"/>`;
+    yLines+=`<line x1="${pad.l}" y1="${y}" x2="${pad.l+plotW}" y2="${y}" stroke="var(--border)" stroke-width="0.5"/>`;
     yLines+=`<text x="${(pad.l-5).toFixed(1)}" y="${(parseFloat(y)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text3)">${Math.round(v)}</text>`;
   });
   let xLabels='';
@@ -1305,31 +1555,78 @@ function renderCicloView(){
     if(phase&&el.classList.contains(phase))el.classList.add('selected');
   });
   const inp=document.getElementById('ciclo-date-input');
-  if(inp&&cycleStartDate)inp.value=cycleStartDate;
+  if(inp) inp.value=todayISO();          // lo más común es registrar el de hoy o uno reciente
+  renderCicloStats();
+  renderCicloHistory();
   updateCicloCalcResult();
 }
 
+function renderCicloStats(){
+  const box=document.getElementById('ciclo-stats');
+  if(!box) return;
+  const day=calcCycleDay();
+  if(day==null){
+    box.innerHTML='<div class="cyc-empty" style="grid-column:1/-1">Registrá tu primer período para calcular las fases automáticamente.</div>';
+    return;
+  }
+  const len=getCycleLength(), falta=daysUntilNext(), n=cycleLengths().length;
+  let faltaVal,faltaLbl,faltaCls='';
+  if(falta>0){faltaVal=falta;faltaLbl=falta===1?'día para el próximo':'días para el próximo'}
+  else if(falta===0){faltaVal='Hoy';faltaLbl='te toca hoy';faltaCls=' today'}
+  else {faltaVal=-falta;faltaLbl=(falta===-1?'día de atraso':'días de atraso');faltaCls=' late'}
+  const base=n?('promedio de tus últimos '+n+(n===1?' ciclo':' ciclos')):'estimado (registrá otro período para afinarlo)';
+  box.innerHTML=
+    `<div class="cyc-stat"><div class="cyc-stat-value">${day}</div><div class="cyc-stat-label">día del ciclo</div></div>`+
+    `<div class="cyc-stat"><div class="cyc-stat-value${faltaCls}">${faltaVal}</div><div class="cyc-stat-label">${faltaLbl}</div></div>`+
+    `<div class="cyc-stat"><div class="cyc-stat-value">${len}</div><div class="cyc-stat-label">días de ciclo · ${base}</div></div>`+
+    `<div class="cyc-stat"><div class="cyc-stat-value">${fmtDate(nextExpected())}</div><div class="cyc-stat-label">próximo estimado</div></div>`;
+}
+
+function renderCicloHistory(){
+  const box=document.getElementById('ciclo-history');
+  if(!box) return;
+  if(!cycleStarts.length){box.innerHTML='<div class="cyc-empty">Todavía no registraste ningún período.</div>';return}
+  const recientes=[...cycleStarts].reverse();
+  box.innerHTML=recientes.map((d,i)=>{
+    const prev=recientes[i+1];
+    const len=prev?daysBetween(prev,d):null;
+    const raro=len!==null&&(len<MIN_CYCLE||len>MAX_CYCLE);
+    const gap=len===null?'primer registro'
+      :(len+' días desde el anterior'+(raro?' · fuera de rango, no cuenta para el promedio':''));
+    return `<div class="cyc-row"><div><div class="cyc-row-date">${fmtDateLong(d)}</div><div class="cyc-row-gap">${gap}</div></div>`+
+           `<button class="cyc-row-del" onclick="confirmDeletePeriod('${d}')" aria-label="Borrar">✕</button></div>`;
+  }).join('');
+}
+function confirmDeletePeriod(iso){
+  if(confirm('¿Borrar el período del '+fmtDateLong(iso)+'?')) deletePeriodStart(iso);
+}
+
 // ── NAV ───────────────────────────────────────────────────────
+let currentView='progress';
 function switchView(v){
+  currentView=v;
   ['progress','workout','history','ciclo'].forEach(vid=>{
     document.getElementById('view-'+vid).classList.toggle('hidden',v!==vid);
     document.getElementById('nav-'+vid).classList.toggle('active',v===vid);
   });
   if(v==='progress') renderProgressView();
-  if(v==='workout'){updateSelectorLabel();renderProgress();renderRoutine()}
+  if(v==='workout'){updateSessionLabel();renderProgress();renderRoutine()}
   if(v==='history') renderHistory();
   if(v==='ciclo') renderCicloView();
 }
+// Redibuja la vista activa cuando los datos cambian por debajo (ej: al resolver un conflicto)
+function rerenderCurrentView(){renderPhase();switchView(currentView)}
 
 document.getElementById('cycle-modal').addEventListener('click',function(e){if(e.target===this)closeCycleModal()});
 
 // ── INIT ──────────────────────────────────────────────────────
-(async()=>{
-  await loadAll();
-  renderAll();
-  if(document.getElementById('view-history')&&!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
-  checkFirstRun();
-})();
+loadLocal();
+renderAll();
+// La reconciliación con Sheets va después del primer dibujado y sin bloquearlo.
+// checkFirstRun espera a que termine: si no, en un teléfono nuevo te pediría la fecha del
+// ciclo durante unos segundos aunque ya estuviera guardada en Sheets.
+function checkCyclePrompts(){checkFirstRun();checkPeriodDue()}
+reconcileWithSheets().then(checkCyclePrompts,checkCyclePrompts);
 </script>
 </body>
 </html>
