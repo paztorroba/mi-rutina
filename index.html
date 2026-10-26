@@ -3,28 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Mi Rutina</title>
+<title>Dale Paz</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="Icons/icon-32.png">
+<link rel="apple-touch-icon" href="Icons/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dale Paz">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#f7f7f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)">
+
+<script>
+// Resuelve el tema ANTES de pintar: si esto corriera junto al resto del JS,
+// al abrir de noche verías un destello blanco antes de que cambie a oscuro.
+// La preferencia es local a cada dispositivo a propósito (no viaja a Sheets):
+// querés oscuro en el celu de noche sin que te lo imponga en la laptop.
+(function(){
+  var THEME_KEY='gym_theme';
+  var pref='auto';
+  try{pref=localStorage.getItem(THEME_KEY)||'auto'}catch(e){}
+  var dark=pref==='dark'||(pref==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme=dark?'dark':'light';
+  window.__themePref=pref;
+})();
+</script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+/* ─── SISTEMA DE COLOR ─────────────────────────────────────────
+   Una sola fuente de verdad. Ningún color literal fuera de este bloque:
+   así el modo oscuro es solo redefinir tokens, sin tocar una sola regla.
+
+   El lime es una SUPERFICIE, nunca una tinta: #ccff00 como texto sobre
+   blanco da 1.18:1 (ilegible). Va de fondo con --on-accent encima (14.8:1).
+   Para texto está --accent-text (#2f5d00 en claro, 7.8:1 sobre blanco).
+   ───────────────────────────────────────────────────────────── */
 :root{
-  --bg:#f5f5f0;--bg2:#ffffff;--bg3:#f0f0eb;--bg4:#e8e8e3;
+  --bg:#f7f7f2;--bg2:#ffffff;--bg3:#f0f0ea;--bg4:#e6e6de;
+  --bg-blur:rgba(247,247,242,0.94);--nav-blur:rgba(255,255,255,0.95);
   --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
-  --text:#1a1a1a;--text2:#666;--text3:#999;
-  --accent:#7cb518;--accent-bg:rgba(124,181,24,0.1);--accent-dark:#5a8a0e;
-  --red:#e05252;--blue:#4a90d9;--amber:#d4860a;--green:#4caf7d;
+  --text:#1a1a1a;--text2:#5c5c5c;--text3:#757575;
+  --overlay:rgba(0,0,0,0.45);
+
+  --accent:#ccff00;            /* lime: barras, pills activas, botones */
+  --on-accent:#1a1a1a;         /* tinta sobre lime */
+  --accent-text:#2f5d00;       /* el acento cuando es TEXTO o ícono */
+  --accent-soft:#f3ffcf;       /* lime diluido: fondo de chips */
+  --accent-soft-line:#d6f285;
+
+  --done:#4caf7d;--on-done:#ffffff;
+  --neutral-chip:#767676;--on-neutral-chip:#ffffff;
+  --red:#b03030;--amber:#9a6200;
+
+  /* Fases del ciclo: terna tinta / fondo / borde */
+  --ph-folicular-ink:#2a6fa8;--ph-folicular-bg:#e8f4fd;--ph-folicular-line:#b8d9f5;
+  --ph-ovulacion-ink:#4a7a10;--ph-ovulacion-bg:#f0f8e0;--ph-ovulacion-line:#c5e08a;
+  --ph-lutea-ink:#9a6200;--ph-lutea-bg:#fef6e6;--ph-lutea-line:#f5d68a;
+  --ph-menstrual-ink:#b03030;--ph-menstrual-bg:#fdeaea;--ph-menstrual-line:#f5b8b8;
+
+  /* Taxonomía de los chips */
+  --tag-zona-ink:#2a6fa8;--tag-zona-bg:#e8f4fd;--tag-zona-line:#b8d9f5;
+  --tag-aer-ink:#a65000;--tag-aer-bg:#fff0e0;--tag-aer-line:#ffd0a0;
+  --tag-anaer-ink:#4a7a10;--tag-anaer-bg:#f0f8e0;--tag-anaer-line:#c5e08a;
+
   --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
   --shadow-md:0 4px 12px rgba(0,0,0,0.08);
   --radius:14px;--radius-sm:10px;--radius-xs:7px;
 }
+
+/* El tema siempre se resuelve a claro u oscuro en el script inline del head,
+   así no hace falta duplicar este bloque dentro de una media query. */
+:root[data-theme="dark"]{
+  --bg:#111113;--bg2:#1b1b1f;--bg3:#25252a;--bg4:#303036;
+  --bg-blur:rgba(17,17,19,0.94);--nav-blur:rgba(27,27,31,0.95);
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.17);
+  --text:#f2f2ef;--text2:#a9a9a4;--text3:#8e8e92;
+  --overlay:rgba(0,0,0,0.65);
+
+  --accent:#ccff00;
+  --on-accent:#16210a;
+  --accent-text:#c2f000;       /* sobre fondo oscuro la tinta se aclara */
+  --accent-soft:rgba(204,255,0,0.13);
+  --accent-soft-line:rgba(204,255,0,0.34);
+
+  --done:#4caf7d;--on-done:#0d1a13;
+  --neutral-chip:#53535a;--on-neutral-chip:#e8e8e4;
+  --red:#f08a8a;--amber:#e8b057;
+
+  --ph-folicular-ink:#8fc4f5;--ph-folicular-bg:rgba(74,144,217,0.14);--ph-folicular-line:rgba(74,144,217,0.34);
+  --ph-ovulacion-ink:#b6e55c;--ph-ovulacion-bg:rgba(124,181,24,0.14);--ph-ovulacion-line:rgba(124,181,24,0.34);
+  --ph-lutea-ink:#e8b057;--ph-lutea-bg:rgba(212,134,10,0.14);--ph-lutea-line:rgba(212,134,10,0.34);
+  --ph-menstrual-ink:#f08a8a;--ph-menstrual-bg:rgba(224,82,82,0.14);--ph-menstrual-line:rgba(224,82,82,0.34);
+
+  --tag-zona-ink:#8fc4f5;--tag-zona-bg:rgba(74,144,217,0.14);--tag-zona-line:rgba(74,144,217,0.32);
+  --tag-aer-ink:#f0a35c;--tag-aer-bg:rgba(224,140,60,0.14);--tag-aer-line:rgba(224,140,60,0.32);
+  --tag-anaer-ink:#b6e55c;--tag-anaer-bg:rgba(124,181,24,0.14);--tag-anaer-line:rgba(124,181,24,0.32);
+
+  --shadow:0 1px 3px rgba(0,0,0,0.5),0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md:0 4px 14px rgba(0,0,0,0.55);
+}
+:root{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+
+/* Cada fase expone su terna como tokens locales: las reglas de abajo se
+   escriben una sola vez en lugar de repetirse cuatro veces por componente. */
+.folicular{--ph-ink:var(--ph-folicular-ink);--ph-bg:var(--ph-folicular-bg);--ph-line:var(--ph-folicular-line)}
+.ovulacion{--ph-ink:var(--ph-ovulacion-ink);--ph-bg:var(--ph-ovulacion-bg);--ph-line:var(--ph-ovulacion-line)}
+.lutea{--ph-ink:var(--ph-lutea-ink);--ph-bg:var(--ph-lutea-bg);--ph-line:var(--ph-lutea-line)}
+.menstrual{--ph-ink:var(--ph-menstrual-ink);--ph-bg:var(--ph-menstrual-bg);--ph-line:var(--ph-menstrual-line)}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;padding-bottom:90px}
 
 /* TOPBAR */
-.topbar{position:sticky;top:0;background:rgba(245,245,240,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:14px 16px 12px;z-index:100;display:flex;align-items:center;justify-content:space-between}
-.topbar-title{font-size:17px;font-weight:700;letter-spacing:-0.4px}
-.topbar-right{display:flex;align-items:center;gap:8px}
-#sync-status{font-size:11px;color:var(--text3)}
-.cycle-pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:6px 11px;cursor:pointer;font-size:12px;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow)}
+.topbar{position:sticky;top:0;background:var(--bg-blur);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:14px 16px 12px;z-index:100;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-size:17px;font-weight:700;letter-spacing:-0.4px;white-space:nowrap;flex-shrink:0}
+.topbar-right{display:flex;align-items:center;gap:8px;min-width:0;flex-shrink:1}
+#sync-status{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cycle-pill{display:flex;align-items:center;gap:5px;flex-shrink:0;background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:6px 11px;cursor:pointer;font-size:12px;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow)}
 .cycle-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.theme-btn{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.theme-btn:active{background:var(--bg3)}
+.theme-btn svg{width:15px;height:15px}
 
 
 /* PROGRESS */
@@ -32,16 +131,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .progress-card{background:var(--bg2);border-radius:var(--radius);padding:11px 13px;box-shadow:var(--shadow);border:0.5px solid var(--border)}
 .progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
 .progress-label{font-size:13px;color:var(--text2)}
-.progress-pct{font-size:13px;font-weight:600;color:var(--accent)}
+.progress-pct{font-size:13px;font-weight:600;color:var(--accent-text)}
 .progress-bar-bg{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
 .progress-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.4s ease}
 
 /* PHASE BANNER */
 .phase-banner{margin:10px 16px 0;padding:10px 13px;border-radius:var(--radius-sm);font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow)}
-.phase-banner.folicular{background:#e8f4fd;color:#2a6fa8;border:0.5px solid #b8d9f5}
-.phase-banner.ovulacion{background:#f0f8e0;color:#4a7a10;border:0.5px solid #c5e08a}
-.phase-banner.lutea{background:#fef6e6;color:#9a6200;border:0.5px solid #f5d68a}
-.phase-banner.menstrual{background:#fdeaea;color:#b03030;border:0.5px solid #f5b8b8}
+.phase-banner{background:var(--ph-bg);color:var(--ph-ink);border:0.5px solid var(--ph-line)}
 
 /* EXERCISES LIST (no blocks) */
 .section-gap{height:10px}
@@ -52,7 +148,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 .ex-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
 .check-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
-.check-btn.checked{background:var(--green);border-color:var(--green)}
+.check-btn.checked{background:var(--done);border-color:var(--done)}
 .check-btn svg{width:13px;height:13px}
 .ex-name{font-size:14px;font-weight:600;line-height:1.3;flex:1;color:var(--text)}
 
@@ -61,13 +157,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .chips-group-2{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;align-items:center}
 .chip{font-size:11px;padding:3px 8px;border-radius:20px;border:0.5px solid var(--border2);color:var(--text2);background:var(--bg3);font-weight:400}
 .chip.reps{font-size:12px;font-weight:700;color:var(--text);background:var(--bg4);border-color:var(--border2);padding:4px 10px}
-.chip.series{color:var(--accent-dark);border-color:rgba(124,181,24,0.4);background:var(--accent-bg);font-weight:500}
-.chip.tag-zona{color:#2a6fa8;background:#e8f4fd;border-color:#b8d9f5}
-.chip.tag-tipo-a{color:#c06000;background:#fff0e0;border-color:#ffd0a0}
-.chip.tag-tipo-an{color:#4a7a10;background:#f0f8e0;border-color:#c5e08a}
-.chip.tag-lugar{font-size:11px;font-weight:600;padding:3px 9px;color:#fff;border:none;white-space:nowrap}
-.chip.tag-lugar-piso{background:#8a8a8a}
-.chip.tag-lugar-maquina{background:var(--accent-dark)}
+.chip.series{color:var(--accent-text);border-color:var(--accent-soft-line);background:var(--accent-soft);font-weight:500}
+.chip.tag-zona{color:var(--tag-zona-ink);background:var(--tag-zona-bg);border-color:var(--tag-zona-line)}
+.chip.tag-tipo-a{color:var(--tag-aer-ink);background:var(--tag-aer-bg);border-color:var(--tag-aer-line)}
+.chip.tag-tipo-an{color:var(--tag-anaer-ink);background:var(--tag-anaer-bg);border-color:var(--tag-anaer-line)}
+.chip.tag-lugar{font-size:11px;font-weight:600;padding:3px 9px;border:none;white-space:nowrap}
+.chip.tag-lugar-piso{background:var(--neutral-chip);color:var(--on-neutral-chip)}
+.chip.tag-lugar-maquina{background:var(--accent);color:var(--on-accent)}
 
 /* WEIGHT */
 .weight-row{display:flex;align-items:center;gap:7px;padding-top:9px;border-top:0.5px solid var(--border)}
@@ -76,18 +172,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .weight-btn{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
 .weight-btn:active{background:var(--bg4)}
 .weight-input{width:68px;height:30px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-xs);color:var(--text);font-size:14px;font-weight:600;text-align:center;-webkit-appearance:none;appearance:none;outline:none}
-.weight-input:focus{border-color:var(--accent);background:var(--bg2)}
+.weight-input:focus{border-color:var(--accent-text);background:var(--bg2)}
 .weight-unit{font-size:12px;color:var(--text3)}
 
 /* TIMER */
 .timer-row{display:flex;align-items:center;gap:7px;padding-top:9px;border-top:0.5px solid var(--border);margin-top:9px}
-.timer-display{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.5px;color:var(--accent);flex:1}
-.timer-display.done-t{color:var(--green)}
+.timer-display{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.5px;color:var(--accent-text);flex:1}
+.timer-display.done-t{color:var(--accent-text)}
 .timer-btn{padding:6px 13px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;box-shadow:var(--shadow)}
-.timer-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.timer-btn.active{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:600}
 .timer-preset-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;align-items:center}
 .timer-preset{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.15s;font-weight:500}
-.timer-preset.active-preset{border-color:var(--accent);color:#fff;background:var(--accent)}
+.timer-preset.active-preset{border-color:var(--accent);color:var(--on-accent);background:var(--accent)}
 
 /* MEDIA BUTTON */
 .media-btn{width:28px;height:28px;border-radius:var(--radius-xs);border:0.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent;transition:background 0.15s}
@@ -95,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .media-btn svg{width:14px;height:14px;color:var(--text3)}
 
 /* MEDIA MODAL */
-.media-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+.media-modal-overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:200;align-items:center;justify-content:center;padding:20px}
 .media-modal-overlay.open{display:flex}
 .media-modal{background:var(--bg2);border-radius:var(--radius);padding:20px;width:100%;max-width:380px;box-shadow:var(--shadow-md)}
 .media-modal-title{font-size:15px;font-weight:600;margin-bottom:14px;color:var(--text)}
@@ -106,14 +202,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* CARDIO */
 .cardio-card{margin:0 16px 8px;padding:13px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;gap:11px;box-shadow:var(--shadow)}
-.cardio-icon{width:38px;height:38px;border-radius:var(--radius-sm);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.cardio-icon{width:38px;height:38px;border-radius:var(--radius-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
 .cardio-name{font-size:14px;font-weight:500;color:var(--text)}
 .cardio-meta{font-size:12px;color:var(--text2);margin-top:2px}
 
 /* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:0.5px solid var(--border);padding:10px 20px 22px;display:flex;justify-content:space-around;z-index:100}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,430px);background:var(--nav-blur);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:0.5px solid var(--border);padding:10px 20px 22px;display:flex;justify-content:space-around;z-index:100}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:0 12px;transition:color 0.15s;-webkit-tap-highlight-color:transparent}
-.nav-btn.active{color:var(--accent-dark)}
+.nav-btn.active{color:var(--accent-text)}
 .nav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center}.nav-icon svg{width:22px;height:22px}
 
 /* HISTORY */
@@ -125,10 +221,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .history-ex-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
 .history-weights{display:flex;gap:7px;flex-wrap:wrap}
 .history-weight-tag{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--bg3);color:var(--text2);border:0.5px solid var(--border2)}
-.history-weight-tag span{color:var(--accent-dark);font-weight:600}
+.history-weight-tag span{color:var(--accent-text);font-weight:600}
 
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:200;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;padding:20px 18px 40px;width:100%;max-width:430px;box-shadow:var(--shadow-md)}
 .modal-title{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--text)}
@@ -136,55 +232,40 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .phase-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .phase-opt{padding:13px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.15s}
 .phase-opt.selected{border-width:1.5px}
-.phase-opt.folicular.selected{border-color:#4a90d9;background:#e8f4fd}
-.phase-opt.ovulacion.selected{border-color:var(--accent);background:var(--accent-bg)}
-.phase-opt.lutea.selected{border-color:var(--amber);background:#fef6e6}
-.phase-opt.menstrual.selected{border-color:var(--red);background:#fdeaea}
+.phase-opt.selected{border-color:var(--ph-ink);background:var(--ph-bg)}
 .phase-opt-name{font-size:13px;font-weight:600;color:var(--text)}
 .phase-opt-hint{font-size:11px;color:var(--text3);margin-top:2px}
 .phase-detail{margin-bottom:14px;padding:13px;border-radius:var(--radius-sm);border:0.5px solid var(--border2)}
-.phase-detail.folicular{background:#e8f4fd;border-color:#b8d9f5}
-.phase-detail.ovulacion{background:#f0f8e0;border-color:#c5e08a}
-.phase-detail.lutea{background:#fef6e6;border-color:#f5d68a}
-.phase-detail.menstrual{background:#fdeaea;border-color:#f5b8b8}
+.phase-detail{background:var(--ph-bg);border-color:var(--ph-line)}
 .phase-detail-day{font-size:20px;font-weight:700;letter-spacing:-0.4px;line-height:1;margin-bottom:4px}
-.phase-detail.folicular .phase-detail-day{color:#2a6fa8}
-.phase-detail.ovulacion .phase-detail-day{color:#4a7a10}
-.phase-detail.lutea .phase-detail-day{color:#9a6200}
-.phase-detail.menstrual .phase-detail-day{color:#b03030}
+.phase-detail-day{color:var(--ph-ink)}
 .phase-detail-name{font-size:13px;font-weight:700;margin-bottom:4px}
-.phase-detail.folicular .phase-detail-name{color:#2a6fa8}
-.phase-detail.ovulacion .phase-detail-name{color:#4a7a10}
-.phase-detail.lutea .phase-detail-name{color:#9a6200}
-.phase-detail.menstrual .phase-detail-name{color:#b03030}
+.phase-detail-name{color:var(--ph-ink)}
 .phase-detail-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
 .phase-detail-advice{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
-.phase-detail.folicular .phase-detail-advice{color:#2a6fa8}
-.phase-detail.ovulacion .phase-detail-advice{color:#4a7a10}
-.phase-detail.lutea .phase-detail-advice{color:#9a6200}
-.phase-detail.menstrual .phase-detail-advice{color:#b03030}
+.phase-detail-advice{color:var(--ph-ink)}
 .modal-divider{height:0.5px;background:var(--border);margin:14px 0}
 .modal-label{font-size:12px;color:var(--text3);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.8px}
 .date-input-row{display:flex;gap:8px;align-items:center}
 .date-input{flex:1;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:14px;outline:none;-webkit-appearance:none}
-.date-input:focus{border-color:var(--accent)}
-.date-save-btn{padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer}
+.date-input:focus{border-color:var(--accent-text)}
+.date-save-btn{padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:600;border:none;cursor:pointer}
 .cycle-calc-result{font-size:12px;color:var(--text2);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:var(--radius-xs);display:none}
 .modal-close{display:block;width:100%;margin-top:14px;padding:11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:14px;cursor:pointer}
 
 /* FIRST RUN */
-.first-run-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:20px}
+.first-run-overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:300;align-items:center;justify-content:center;padding:20px}
 .first-run-overlay.open{display:flex}
 .first-run-modal{background:var(--bg2);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:380px;box-shadow:var(--shadow-md)}
 .first-run-title{font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:-0.4px}
 .first-run-sub{font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.5}
-.first-run-btn{width:100%;padding:13px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:4px}
+.first-run-btn{width:100%;padding:13px;border-radius:var(--radius-sm);background:var(--accent);color:var(--on-accent);font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:4px}
 .first-run-skip{width:100%;padding:11px;border-radius:var(--radius-sm);background:transparent;color:var(--text3);font-size:14px;border:none;cursor:pointer;margin-top:8px}
 
 /* HIGHLIGHTS */
 .highlights-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 0}
 .highlight-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:15px 14px 13px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px}
-.highlight-value{font-size:32px;font-weight:700;letter-spacing:-1.5px;color:var(--accent-dark);line-height:1}
+.highlight-value{font-size:32px;font-weight:700;letter-spacing:-1.5px;color:var(--accent-text);line-height:1}
 .highlight-label{font-size:12px;color:var(--text3);line-height:1.4}
 
 /* PROGRESS WEEKS GRID */
@@ -194,13 +275,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .pw-days-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .pw-day{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
 .pressing{transform:scale(0.97);opacity:0.82;transition:transform 0.1s,opacity 0.1s}
-.pw-day.sel{border-color:var(--accent);background:var(--accent-bg)}
+.pw-day.sel{border-color:var(--accent-text);background:var(--accent-soft)}
 .pw-day.done{background:var(--bg3);border-color:var(--border)}
 .pw-day-label{font-size:13px;font-weight:500;color:var(--text)}
-.pw-day.sel .pw-day-label{color:var(--accent-dark)}
+.pw-day.sel .pw-day-label{color:var(--accent-text)}
 .pw-day.done .pw-day-label{color:var(--text3);text-decoration:line-through}
 .pw-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg)}
-.pw-day.done .pw-check{background:var(--green);border-color:var(--green)}
+.pw-day.done .pw-check{background:var(--done);border-color:var(--done)}
 
 /* CICLO VIEW */
 .ciclo-section{padding:14px 16px 0}
@@ -209,10 +290,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cyc-stat{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 11px}
 .cyc-stat-value{font-size:19px;font-weight:700;letter-spacing:-0.4px;color:var(--text)}
 .cyc-stat-value.late{color:var(--red)}
-.cyc-stat-value.today{color:var(--accent-dark)}
+.cyc-stat-value.today{color:var(--accent-text)}
 .cyc-stat-label{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.3}
-.cyc-today-btn{width:100%;margin-top:11px;padding:11px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cyc-today-btn:active{background:var(--accent-dark)}
+.cyc-today-btn{width:100%;margin-top:11px;padding:11px;border-radius:var(--radius-sm);background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cyc-today-btn:active{background:var(--accent-text);color:var(--bg2)}
 .cyc-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border)}
 .cyc-row:last-child{border-bottom:none}
 .cyc-row-date{font-size:13px;font-weight:500;color:var(--text)}
@@ -238,34 +319,34 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* HISTORIAL VIEW */
 .hist-search-wrap{margin:14px 16px 12px;position:relative}
 .hist-search-input{width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);font-size:14px;outline:none;box-shadow:var(--shadow);-webkit-appearance:none}
-.hist-search-input:focus{border-color:var(--accent)}
+.hist-search-input:focus{border-color:var(--accent-text)}
 .hist-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);max-height:210px;overflow-y:auto;z-index:50}
 .hist-dropdown.open{display:block}
 .hist-drop-item{padding:10px 12px;font-size:13px;color:var(--text);cursor:pointer;border-bottom:0.5px solid var(--border)}
 .hist-drop-item:last-child{border-bottom:none}
-.hist-drop-item:active,.hist-drop-item.active{background:var(--accent-bg);color:var(--accent-dark)}
+.hist-drop-item:active,.hist-drop-item.active{background:var(--accent-soft);color:var(--accent-text)}
 .hist-chart-section{margin:0 16px 14px}
 .hist-chart-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
 .hist-chart{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 8px 6px;box-shadow:var(--shadow);min-height:130px;display:flex;align-items:center;justify-content:center}
 .hist-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;padding:0 16px;margin:0 0 8px}
 .hist-list-section{margin-bottom:14px}
 .hist-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 13px;margin:0 16px 8px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center}
-.hist-card.latest{border-color:var(--accent);background:var(--accent-bg)}
+.hist-card.latest{border-color:var(--accent-text);background:var(--accent-soft)}
 .hist-card-name{font-size:13px;font-weight:500;color:var(--text)}
-.hist-card.latest .hist-card-name{color:var(--accent-dark)}
+.hist-card.latest .hist-card-name{color:var(--accent-text)}
 .hist-card-right{text-align:right}
 .hist-card-weight{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
-.hist-card.latest .hist-card-weight{color:var(--accent-dark)}
+.hist-card.latest .hist-card-weight{color:var(--accent-text)}
 .hist-card-date{font-size:11px;color:var(--text3);margin-top:1px}
 .hist-add-section{padding:0 16px 24px}
 .hist-add-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
 .hist-add-row{display:flex;align-items:center;gap:8px}
 .hist-add-input{width:100%;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:14px;outline:none;-webkit-appearance:none}
-.hist-add-input:focus{border-color:var(--accent);background:var(--bg2)}
+.hist-add-input:focus{border-color:var(--accent-text);background:var(--bg2)}
 .hist-add-weight{flex:1;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-size:14px;outline:none;text-align:center;-webkit-appearance:none}
-.hist-add-weight:focus{border-color:var(--accent);background:var(--bg2)}
+.hist-add-weight:focus{border-color:var(--accent-text);background:var(--bg2)}
 .hist-add-unit{font-size:13px;color:var(--text3);flex-shrink:0}
-.hist-add-btn{padding:9px 18px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;flex-shrink:0}
+.hist-add-btn{padding:9px 18px;border-radius:var(--radius-sm);background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:600;border:none;cursor:pointer;flex-shrink:0}
 
 .hidden{display:none!important}
 </style>
@@ -276,6 +357,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="topbar-title">Dale Paz</div>
   <div class="topbar-right">
     <div id="sync-status"></div>
+    <button class="theme-btn" id="theme-btn" onclick="cycleTheme()" aria-label="Cambiar tema"></button>
     <div class="cycle-pill" onclick="openCycleModal()">
       <div class="cycle-dot" id="cycle-dot"></div>
       <span id="cycle-label">Ciclo</span>
@@ -753,9 +835,9 @@ function setSyncStatus(s){
   el.onclick=(s==='conflict')?resolveConflict:(s==='err')?()=>syncToSheets():null;
   el.style.cursor=(s==='err'||s==='conflict')?'pointer':'';
   if(s==='pending'||s==='saving'){el.textContent='Guardando…';el.style.color='var(--text2)'}
-  else if(s==='ok'){el.textContent='✓ Guardado';el.style.color='var(--accent-dark)';setTimeout(()=>{if(el.textContent==='✓ Guardado')el.textContent=''},2500)}
-  else if(s==='err'){el.textContent='⚠ Sin sincronizar · tocá para reintentar';el.style.color='var(--amber)'}
-  else if(s==='conflict'){el.textContent='⚠ Otro dispositivo · tocá para resolver';el.style.color='var(--amber)'}
+  else if(s==='ok'){el.textContent='✓ Guardado';el.style.color='var(--accent-text)';setTimeout(()=>{if(el.textContent==='✓ Guardado')el.textContent=''},2500)}
+  else if(s==='err'){el.textContent='⚠ Sin guardar';el.style.color='var(--amber)';el.title='No se pudo guardar en Google Sheets. Tocá para reintentar.'}
+  else if(s==='conflict'){el.textContent='⚠ Conflicto';el.style.color='var(--amber)';el.title='Hay datos más nuevos en otro dispositivo. Tocá para elegir cuál conservar.'}
 }
 
 // Sube el estado actual y VERIFICA leyendo de vuelta (el POST no-cors no devuelve respuesta,
@@ -913,6 +995,47 @@ async function reconcileWithSheets(){
   }
 }
 
+// ── TEMA ──────────────────────────────────────────────────────
+// Tres estados: auto (sigue al celular) → claro → oscuro → auto.
+// El ícono muestra el estado ACTUAL, no el próximo, para que se entienda
+// de un vistazo en qué modo estás.
+const THEME_KEY='gym_theme';
+const THEME_ICONS={
+  auto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg>',
+  light:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>',
+  dark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z" fill="currentColor" stroke="none"/></svg>'
+};
+let themePref=window.__themePref||'auto';
+const darkQuery=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+
+function resolvedTheme(){
+  if(themePref==='dark') return 'dark';
+  if(themePref==='light') return 'light';
+  return (darkQuery&&darkQuery.matches)?'dark':'light';
+}
+function applyTheme(){
+  const t=resolvedTheme();
+  document.documentElement.dataset.theme=t;
+  const btn=document.getElementById('theme-btn');
+  if(btn){
+    btn.innerHTML=THEME_ICONS[themePref]||THEME_ICONS.auto;
+    btn.title={auto:'Tema: automático',light:'Tema: claro',dark:'Tema: oscuro'}[themePref];
+  }
+  // La barra de estado del celular tiene que acompañar al fondo de la app
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.remove());
+  const m=document.createElement('meta');
+  m.name='theme-color';
+  m.content=(t==='dark')?'#111113':'#f7f7f2';
+  document.head.appendChild(m);
+}
+function cycleTheme(){
+  themePref={auto:'light',light:'dark',dark:'auto'}[themePref]||'auto';
+  try{localStorage.setItem(THEME_KEY,themePref)}catch(e){}
+  applyTheme();
+}
+// Si está en automático y cambiás el modo del celular, la app acompaña sola
+if(darkQuery&&darkQuery.addEventListener) darkQuery.addEventListener('change',()=>{if(themePref==='auto')applyTheme()});
+
 // ── CYCLE ─────────────────────────────────────────────────────
 // El largo del ciclo sale del promedio de tus últimos períodos, no de un 28 fijo.
 // La ovulación se cuenta hacia ATRÁS desde el próximo período: la fase lútea dura
@@ -984,7 +1107,7 @@ function phaseRange(p,len=getCycleLength()){
 }
 function phaseLabel(p){return{folicular:'Fase folicular · más energía 💪',ovulacion:'Ovulación · pico de fuerza 🔥',lutea:'Fase lútea · moderá si es necesario 🌙',menstrual:'Menstruación · escuchá tu cuerpo ❤️'}[p]||''}
 function phaseName(p){return{folicular:'Folicular',ovulacion:'Ovulación',lutea:'Lútea',menstrual:'Menstrual'}[p]||'Ciclo'}
-function phaseColor(p){return{folicular:'#4a90d9',ovulacion:'var(--accent)',lutea:'var(--amber)',menstrual:'var(--red)'}[p]||'var(--accent)'}
+function phaseColor(p){return{folicular:'var(--ph-folicular-ink)',ovulacion:'var(--ph-ovulacion-ink)',lutea:'var(--ph-lutea-ink)',menstrual:'var(--ph-menstrual-ink)'}[p]||'var(--accent-text)'}
 function renderPhase(){
   const phase=calcPhase();
   const banner=document.getElementById('phase-banner');
@@ -998,7 +1121,7 @@ function renderPhase(){
     lbl.textContent=phaseName(phase);
   } else {
     banner.classList.add('hidden');
-    dot.style.background='var(--accent)';
+    dot.style.background='var(--accent-text)';
     lbl.textContent='Ciclo';
   }
   document.querySelectorAll('.phase-opt').forEach(el=>{
@@ -1303,7 +1426,7 @@ function renderRoutine(){
     exEl.id='ex-'+CSS.escape(ex.n);
     addLongPress(exEl,()=>toggleCheck(ex.n));
 
-    const checkIcon=isDone?'<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
+    const checkIcon=isDone?'<svg viewBox="0 0 14 14" fill="none" stroke="var(--on-done)" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
 
     let lugarBadge='';
     if(tags){
@@ -1476,10 +1599,10 @@ function renderWeightChart(name){
   hist.forEach((p,i)=>{
     const last=i===n-1;
     const cx=xOf(i).toFixed(1),cy=yOf(p.v).toFixed(1);
-    dots+=`<circle cx="${cx}" cy="${cy}" r="${last?4.5:3}" fill="${last?'var(--accent)':'#fff'}" stroke="var(--accent)" stroke-width="${last?2:1.5}"/>`;
-    if(last) dots+=`<text x="${cx}" y="${(parseFloat(cy)-8).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-dark)">${p.v}kg</text>`;
+    dots+=`<circle cx="${cx}" cy="${cy}" r="${last?4.5:3}" fill="${last?'var(--accent-text)':'var(--bg2)'}" stroke="var(--accent-text)" stroke-width="${last?2:1.5}"/>`;
+    if(last) dots+=`<text x="${cx}" y="${(parseFloat(cy)-8).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-text)">${p.v}kg</text>`;
   });
-  container.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>${yLines}<polygon points="${areaPts}" fill="url(#cg)"/><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xLabels}</svg>`;
+  container.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent-text)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--accent-text)" stop-opacity="0"/></linearGradient></defs>${yLines}<polygon points="${areaPts}" fill="url(#cg)"/><polyline points="${pts}" fill="none" stroke="var(--accent-text)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xLabels}</svg>`;
 }
 
 function renderHistory(){
@@ -1572,7 +1695,7 @@ function renderProgressView(){
       const isDone=isSessDone(w,d);
       const isSel=(w===cW&&d===cD);
       item.className='pw-day'+(isSel?' sel':'')+(isDone?' done':'');
-      item.querySelector('.pw-check').innerHTML=isDone?'<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
+      item.querySelector('.pw-check').innerHTML=isDone?'<svg viewBox="0 0 14 14" fill="none" stroke="var(--on-done)" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg>':'';
     }
   }
 }
@@ -1652,6 +1775,7 @@ document.getElementById('cycle-modal').addEventListener('click',function(e){if(e
 
 // ── INIT ──────────────────────────────────────────────────────
 loadLocal();
+applyTheme();
 renderAll();
 // La reconciliación con Sheets va después del primer dibujado y sin bloquearlo.
 // checkFirstRun espera a que termine: si no, en un teléfono nuevo te pediría la fecha del
