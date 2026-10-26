@@ -715,6 +715,19 @@ function applySnapshot(s){
   normalizeCycleStarts();
   updatedAt=+s.updatedAt||0;
 }
+// Cuánto hay registrado en un snapshot. Solo se usa para desempatar en la migración,
+// cuando ninguno de los dos lados tiene updatedAt y hay que elegir cuál conservar.
+function snapshotSize(s){
+  if(!s) return 0;
+  let n=0;
+  ['weights','checks','doneSessions','customSeries','customReps','sessionOrders'].forEach(k=>{
+    if(s[k]) n+=Object.keys(s[k]).length;
+  });
+  if(s.weightHistory) Object.values(s.weightHistory).forEach(h=>{n+=Array.isArray(h)?h.length:0});
+  if(Array.isArray(s.extraExercises)) n+=s.extraExercises.length;
+  if(Array.isArray(s.cycleStarts)) n+=s.cycleStarts.length;
+  return n;
+}
 function hasData(s){
   if(!s) return false;
   return ['weights','checks','doneSessions','customSeries','customReps','weightHistory'].some(k=>s[k]&&Object.keys(s[k]).length)
@@ -868,6 +881,24 @@ async function reconcileWithSheets(){
   // hayas tocado en el medio tiene que ganarle a una respuesta más vieja.
   const localNow=buildSnapshot();
   const rT=+remote.updatedAt||0, lT=updatedAt;
+
+  // Migración desde la versión anterior: esos datos se guardaron sin updatedAt, así que
+  // ninguno de los dos lados tiene marca de tiempo y no hay forma de saber cuál es más
+  // nuevo. Nos quedamos con el MÁS COMPLETO en vez de asumir que gana el teléfono: si
+  // abrieras la app en un navegador con datos parciales, pisaría meses de entrenamientos.
+  // Pase lo que pase, dejamos la copia ganadora con marca de tiempo para que no se repita.
+  if(rT===0&&lT===0&&hasData(localNow)&&hasData(remote)){
+    if(snapshotSize(remote)>snapshotSize(localNow)){
+      applySnapshot(remote);
+      rerenderCurrentView();
+    }
+    updatedAt=Date.now();
+    saveLocal(buildSnapshot());
+    try{localStorage.setItem(LS_DIRTY,'1')}catch(e){}
+    syncToSheets();
+    return;
+  }
+
   if(rT>lT){
     applySnapshot(remote);              // Sheets tiene algo más nuevo (p. ej. otro dispositivo)
     saveLocal(buildSnapshot());
