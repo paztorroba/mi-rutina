@@ -14,7 +14,6 @@ const parseNum = t => { const v = parseFloat(String(t).replace(',', '.')); retur
 const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const fmtDate = iso => { if (!iso) return ''; const [, m, d] = iso.split('-'); return parseInt(d) + ' ' + MONTHS[parseInt(m) - 1]; };
-const fmtDateLong = iso => { if (!iso) return ''; const [y, m, d] = iso.split('-'); return parseInt(d) + ' ' + MONTHS[parseInt(m) - 1] + ' ' + y; };
 const isDark = () => document.documentElement.dataset.theme === 'dark';
 const WEIGHT_STEP = 1;   // kg que suma/resta el botón + / −
 

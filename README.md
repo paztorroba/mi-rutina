@@ -18,15 +18,14 @@ dale-paz/
 │  ├─ sheets.js        Modales: fase, primer ingreso, agregar ejercicio, técnica
 │  └─ main.js          Eventos, arrastrar para reordenar, aviso de guardado e inicio
 ├─ icons/              Favicon (emoji 💪 sobre fondo oscuro) y generar-iconos.html
-├─ Imagenes/           ← copiá acá tu carpeta de imágenes (no está incluida)
+├─ Imagenes/           Fotos de los ejercicios (44, una por ejercicio con imagen)
 └─ apps-script.gs      Código para pegar en Google Apps Script
 ```
 
 ## Cómo abrirlo en VS Code
 
-1. Abrí la carpeta `dale-paz` (Archivo → Abrir carpeta).
-2. Copiá tu carpeta `Imagenes/` adentro, al lado de `index.html`.
-3. Instalá la extensión **Live Server**, clic derecho en `index.html` → *Open with Live Server*.
+1. Abrí la carpeta del proyecto (Archivo → Abrir carpeta).
+2. Instalá la extensión **Live Server**, clic derecho en `index.html` → *Open with Live Server*.
    (También funciona abriendo `index.html` directo en el navegador.)
 
 ## Google Sheets (para que el progreso se guarde bien)

@@ -20,7 +20,6 @@ body {
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: inherit; }
 input { font: inherit; color: inherit; }
 .hidden { display: none !important; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .i { width: 1em; height: 1em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -35,7 +34,6 @@ input { font: inherit; color: inherit; }
 .title { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; font-size: 26px; line-height: 1.2; }
 .h2 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; font-size: 18px; line-height: 1.3; }
 .caption { font-size: 12px; color: var(--text-3); }
-.muted { color: var(--text-2); }
 .section-label { font-size: 14px; font-weight: 500; color: var(--text-2); margin-top: 6px; }
 .top-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
 .top-actions { display: flex; align-items: center; gap: var(--space-2); }
@@ -64,9 +62,7 @@ input { font: inherit; color: inherit; }
 .btn-secondary { background: var(--raised); color: var(--text); border: 1.5px solid var(--control-border); }
 .btn-secondary:active { background: var(--raised-pressed); border-color: var(--control-border-pressed); }
 .btn-lg { min-height: 48px; font-size: 15px; }
-.btn-sm { min-height: 36px; font-size: 13px; padding: 0 12px; }
 .btn-block { width: 100%; }
-.btn[disabled], .btn.is-off { opacity: .35; pointer-events: none; }
 .btn-icon {
   width: var(--tap); height: var(--tap); min-height: var(--tap); padding: 0; border-radius: 50%;
   background: var(--raised); color: var(--text); border: 1.5px solid var(--control-border);
@@ -92,8 +88,6 @@ input { font: inherit; color: inherit; }
 
 /* ---------- tarjetas ---------- */
 .card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-hero); padding: 14px; }
-.card-row { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-card); }
-.card-row.is-selected, .is-current { border: 2px solid var(--text); }
 
 /* ---------- progreso segmentado (barra) ---------- */
 .segs { display: grid; gap: 4px; }
