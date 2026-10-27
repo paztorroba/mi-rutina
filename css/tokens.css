@@ -1,0 +1,99 @@
+/* ============================================================
+   TOKENS DE DISEÑO  ·  Dale Paz
+   Acá vive TODO el color, la tipografía y las medidas.
+   Si querés cambiar el look, tocá solo este archivo.
+
+   Capas:  1) primitivos  →  2) semánticos (claro / oscuro)  →  3) componentes (app.css)
+   El tema se aplica con <html data-theme="light|dark"> (ver el script del <head>).
+   ============================================================ */
+
+:root {
+  /* ---------- 1. PRIMITIVOS ---------- */
+  --lima-300: #C4F135;          /* lima principal */
+  --lima-400: #AEDB26;          /* lima presionado */
+  --lima-700: #6A9A00;          /* lima para gráficos sobre claro (3,4:1) */
+  --lima-800: #4C7A00;          /* lima para texto sobre claro (5,1:1) */
+  --ink-900: #11150A;           /* tinta: texto sobre lima y texto principal claro */
+
+  --phase-menstrual: #E0568A;
+  --phase-folicular: #3FA7D6;
+  --phase-ovulacion: #8E7CE6;
+  --phase-lutea:     #E8A33D;
+
+  /* ---------- tipografía ---------- */
+  --font-ui: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+
+  /* ---------- radios (solo tres + pill) ---------- */
+  --radius-control: 12px;       /* miniaturas, campos chicos */
+  --radius-card: 16px;          /* filas, tarjetas compactas, campos */
+  --radius-hero: 20px;          /* tarjetas grandes */
+  --radius-sheet: 28px;         /* hojas inferiores */
+  --radius-pill: 999px;         /* botones y chips */
+
+  /* ---------- espaciado (múltiplos de 4) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+
+  /* ---------- medidas ---------- */
+  --tap: 44px;                  /* tamaño mínimo de toque */
+  --app-max: 480px;
+
+  /* ---------- 2. SEMÁNTICOS · MODO CLARO ---------- */
+  --bg: #F5F7F0;                /* fondo de la app */
+  --card: #FFFFFF;              /* tarjetas */
+  --raised: #ECEFE4;            /* elevado: botones secundarios, chips */
+  --raised-pressed: #DDE2D0;    /* elevado presionado */
+  --border: #DDE2D0;            /* líneas decorativas (NO para delimitar botones) */
+  --control-border: #868E75;    /* borde de botones y campos (3,4:1) */
+  --control-border-pressed: #4F5644;
+
+  --text: #11150A;              /* principal */
+  --text-2: #4F5644;            /* secundario */
+  --text-3: #6B7260;            /* terciario */
+
+  --accent-fill: #C4F135;       /* relleno lima (siempre con tinta encima) */
+  --accent-fill-pressed: #AEDB26;
+  --accent-on: #11150A;         /* tinta sobre lima */
+  --accent-text: #4C7A00;       /* lima como texto */
+  --accent-graphic: #6A9A00;    /* lima en gráficos y progreso */
+  --accent-tint: #EAF8BE;
+
+  --danger: #C23A32;
+  --scrim: rgba(0, 0, 0, 0.5);
+  --toast-bg: #11150A;
+  --toast-text: #F2F5EA;
+
+  color-scheme: light;
+}
+
+/* ---------- 2. SEMÁNTICOS · MODO OSCURO ---------- */
+:root[data-theme="dark"] {
+  --bg: #0D0F0A;
+  --card: #161A10;
+  --raised: #1F2416;
+  --raised-pressed: #2E3722;
+  --border: #2B3220;
+  --control-border: #66724F;
+  --control-border-pressed: #A7AE98;
+
+  --text: #F2F5EA;
+  --text-2: #A7AE98;
+  --text-3: #7E8570;
+
+  --accent-fill: #C4F135;
+  --accent-fill-pressed: #AEDB26;
+  --accent-on: #11150A;
+  --accent-text: #C4F135;       /* en oscuro el lima sirve para todo */
+  --accent-graphic: #C4F135;
+  --accent-tint: #2A3314;
+
+  --danger: #FF8A7A;
+  --toast-bg: #F2F5EA;
+  --toast-text: #11150A;
+
+  color-scheme: dark;
+}
