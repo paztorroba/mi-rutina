@@ -81,7 +81,12 @@ function getSets(n) {
     return fixed;
   }
   const legacyDone = !!S.checks[ck(n)];          // migra los checks de la versión anterior
-  return Array.from({ length: total }, () => ({ d: legacyDone, w: gw(n), r: defReps(n, ex) }));
+  // Arranca con lo ÚLTIMO que hiciste en este ejercicio (peso y repeticiones), no con el
+  // plan: si la vez pasada subiste a 40 kg × 12, hoy ya aparece así.
+  const last = S.lastSets[sk(n)];
+  const w0 = (last && last.w > 0) ? last.w : gw(n);
+  const r0 = ex.timer ? 0 : ((last && last.r > 0) ? last.r : defReps(n, ex));
+  return Array.from({ length: total }, () => ({ d: legacyDone, w: w0, r: r0 }));
 }
 function ensureSets(n) {
   S.sets[stKey(n)] = getSets(n);
@@ -320,7 +325,36 @@ function timerLabel(n, ex) {
   const base = ex.timer ? 'Cronómetro' : 'Descanso';
   return tElapsed(t) >= t.preset ? '¡Listo!' : base + ' ' + fmtClock(tRemaining(n));
 }
+/* Aviso al terminar. En iPhone navigator.vibrate NO existe (Safari no implementa la
+   Vibration API), así que el sonido es el único aviso real: en plancha estás mirando
+   el piso, no la pantalla. El navegador solo deja sonar si el audio se habilitó desde
+   un toque, por eso unlockAudio() va en timerAction, que es justamente un toque. */
+let _audio = null;
+function unlockAudio() {
+  try {
+    if (!_audio) _audio = new (window.AudioContext || window.webkitAudioContext)();
+    if (_audio.state === 'suspended') _audio.resume();
+  } catch (e) { _audio = null; }
+}
+function timerDone() {
+  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]); } catch (e) {}
+  if (!_audio) return;
+  try {
+    [0, 0.22, 0.44].forEach(off => {               // tres pitidos cortos
+      const o = _audio.createOscillator(), g = _audio.createGain();
+      const t0 = _audio.currentTime + off;
+      o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.35, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.18);
+      o.connect(g); g.connect(_audio.destination);
+      o.start(t0); o.stop(t0 + 0.2);
+    });
+  } catch (e) {}
+}
+
 function timerAction(n) {
+  unlockAudio();
   const t = tState(n);
   if (t.running) { t.base = tElapsed(t); t.running = false; }
   else { if (tElapsed(t) >= t.preset) t.base = 0; t.startedAt = Date.now(); t.running = true; }
@@ -334,14 +368,19 @@ let _ticker = null;
 function ensureTicker() { if (!_ticker) _ticker = setInterval(timerTick, 250); }
 function timerTick() {
   let anyRunning = false;
+  // Recorremos el ESTADO, no los botones en pantalla: antes, si cambiabas de vista o
+  // la lista se redibujaba, el cronómetro seguía corriendo pero nunca avisaba.
+  Object.keys(timers).forEach(k => {
+    const t = timers[k];
+    if (t.running && tElapsed(t) >= t.preset) {          // terminó
+      t.running = false; t.base = t.preset;
+      timerDone();
+    }
+    if (t.running) anyRunning = true;
+  });
   $$('.tm-btn').forEach(btn => {
     const n = btn.dataset.n, ex = getEx(n); if (!ex) return;
     const t = tState(n);
-    if (t.running && tElapsed(t) >= t.preset) {          // terminó
-      t.running = false; t.base = t.preset;
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    }
-    if (t.running) anyRunning = true;
     btn.querySelector('.tm-label').textContent = timerLabel(n, ex);
     btn.classList.toggle('is-active', t.running);
   });

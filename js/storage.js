@@ -133,13 +133,22 @@ const Store = {
     let ok = false, conflict = false;
     try {
       await fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: new Blob([JSON.stringify(snap)], { type: 'text/plain' }) });
-      const remote = await Store.loadFromSheets();
-      const rT = remote ? (+remote.updatedAt || 0) : -1;
+      // Verificar leyendo de vuelta, pero con REINTENTOS: cada lectura de Apps Script
+      // tarda 2-3 segundos y en wifi flojo se pasa del límite. Una lectura que no llega
+      // NO significa que no se guardó, y avisar "sin sincronizar" cuando el dato sí subió
+      // asusta al pedo. Solo después de tres intentos lo damos por fallado.
+      let rT = -1;
+      for (let intento = 0; intento < 3; intento++) {
+        if (intento) await new Promise(r => setTimeout(r, 800 * intento));
+        const remote = await Store.loadFromSheets();
+        if (!remote) continue;                       // la lectura no volvió a tiempo
+        rT = +remote.updatedAt || 0;
+        if (rT === snap.updatedAt) break;            // confirmado
+        // El backend rechaza (sin guardar) un envío más viejo que lo que ya tiene, y el
+        // dato de vuelta es MÁS nuevo que el nuestro. Eso es un conflicto, no un error.
+        if (rT > snap.updatedAt) { conflict = true; Store.pendingRemote = remote; break; }
+      }
       ok = (rT === snap.updatedAt);
-      // El backend rechaza (sin guardar) un envío más viejo que lo que ya tiene, y entonces
-      // el dato de vuelta es MÁS nuevo que el nuestro. Con ">=" eso se leía como éxito y se
-      // perdía el entrenamiento. Es un conflicto, no un error de red: lo decide la usuaria.
-      if (!ok && rT > snap.updatedAt) { conflict = true; Store.pendingRemote = remote; }
     } catch (e) { ok = false; }
     Store._syncing = false;
     if (ok && snap.updatedAt === S.updatedAt && !Store._queued) {

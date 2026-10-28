@@ -26,13 +26,27 @@ function showView(v, opts = {}) {
 
 /* ---------- aviso de guardado ---------- */
 let toastTimer = null;
+/* Avisos de guardado. Dos criterios:
+   - "Guardando…" aparece recién a los 600 ms, para no parpadear en cada serie marcada.
+   - Si falla la subida el dato NO se perdió: está en el teléfono y sube solo cuando
+     vuelva la conexión. El mensaje tiene que decir eso, no alarmar. Antes decía
+     "Sin sincronizar · tocá para reintentar", ocupaba dos líneas tapando la pantalla
+     y no quedaba claro qué había que hacer. */
 function setStatus(s) {
   const t = $('#toast'); clearTimeout(toastTimer);
   if (s === 'ok') {
     t.textContent = '✓ Guardado'; t.className = 'toast'; t.hidden = false;
     toastTimer = setTimeout(() => { t.hidden = true; }, 1600);
+  } else if (s === 'saving' || s === 'pending') {
+    if (t.classList.contains('err') || t.classList.contains('is-conflict')) return;
+    toastTimer = setTimeout(() => {
+      t.textContent = 'Guardando…'; t.className = 'toast is-saving'; t.hidden = false;
+    }, 900);
   } else if (s === 'err') {
-    t.textContent = '⚠ Sin sincronizar · tocá para reintentar'; t.className = 'toast err'; t.hidden = false;
+    t.textContent = '📵 Guardado acá · se sube solo'; t.className = 'toast err'; t.hidden = false;
+    // Al ocultarse limpia la clase: si no, el 'err' quedaba pegado y bloqueaba
+    // para siempre el aviso de "Guardando…" de los guardados siguientes.
+    toastTimer = setTimeout(() => { t.hidden = true; t.className = 'toast'; }, 4000);
   } else if (s === 'conflict') {
     t.textContent = '⚠ Otro dispositivo · tocá para resolver'; t.className = 'toast err is-conflict'; t.hidden = false;
   } else { if (!t.classList.contains('err')) t.hidden = true; }

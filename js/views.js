@@ -73,7 +73,7 @@ function cardHTML(ex, pos, total) {
         <button type="button" class="btn btn-secondary btn-lg tm-btn ${t.running ? 'is-active' : ''}" data-act="timer" data-n="${a}">${ic('stopwatch')}<span class="tm-label">${timerLabel(n, ex)}</span></button>
         <button type="button" class="btn btn-secondary btn-lg" data-act="media" data-n="${a}">${ic('photo')}Ver técnica</button>
       </div>
-      <div class="presets" role="group" aria-label="Duración"><span class="caption">Duración</span>${presets}</div>
+      <div class="presets" role="group" aria-label="${ex.timer ? 'Duración del ejercicio' : 'Tiempo de descanso'}"><span class="caption">${ex.timer ? 'Duración' : 'Descanso'}</span>${presets}</div>
     </div>`;
   }
 
