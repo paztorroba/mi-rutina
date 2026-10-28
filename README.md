@@ -45,10 +45,18 @@ Para volver al modo automático: `localStorage.removeItem('gym_theme')` en la co
 
 ## Favicon
 
-`icons/favicon.svg` usa el emoji 💪 como texto, así que cada dispositivo lo dibuja con su propio diseño (en iPhone/Mac, el de Apple).
-Los PNG (`favicon-32.png`, `apple-touch-icon.png`) son el respaldo para Safari y la pantalla de inicio del iPhone.
-Los que vienen incluidos se dibujaron con el emoji de Google; para tener el de Apple, abrí `icons/generar-iconos.html` en tu iPhone o Mac,
-tocá "Descargar íconos" y guardá los dos archivos en `icons/` reemplazando los actuales.
+`icons/icon-source.png` es el original (1080×1080). De ahí salen los demás tamaños:
+
+```
+sips -Z 512 icons/icon-source.png --out icons/icon-512.png
+sips -Z 192 icons/icon-source.png --out icons/icon-192.png
+sips -Z 180 icons/icon-source.png --out icons/apple-touch-icon.png
+sips -Z 32  icons/icon-source.png --out icons/favicon-32.png
+```
+
+Si cambiás el original, regenerá los cuatro y revisá que el dibujo quede dentro del
+80% central: iOS y Android recortan los bordes al aplicar su máscara.
+
 
 ## Cosas que se pueden ajustar rápido
 
