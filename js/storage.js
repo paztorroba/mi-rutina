@@ -124,8 +124,46 @@ const Store = {
   _dirty() { return localStorage.getItem(LS_DIRTY) === '1'; },
 
   /* Sube y verifica leyendo de vuelta. */
+  /* Este dispositivo todavía no leyó la hoja ni una vez. */
+  _remoteSeen: false,
+  /* loadLocal() encontró datos guardados en ESTE dispositivo. */
+  _hadLocal: false,
+
   async syncToSheets() {
     if (Store._syncing) { Store._queued = true; return; }
+
+    /* GUARDIA: nunca subir antes de haber leído la hoja al menos una vez.
+       El 29/10/2026 esto borró cuatro meses de entrenamientos: en un dispositivo
+       sin datos locales, cargar la fecha en la pantalla de bienvenida guardaba un
+       estado recién nacido con marca de tiempo NUEVA, y el backend lo aceptaba
+       justamente por ser el más reciente. Un dispositivo que no sabe qué hay del
+       otro lado no tiene derecho a pisarlo. */
+    if (!Store._hadLocal && !Store._remoteSeen) {
+      Store._syncing = true;
+      const remote = await Store.loadFromSheets();
+      Store._syncing = false;
+      if (!remote) {                               // sin respuesta: no arriesgamos, reintentamos
+        Store._status('err');
+        clearTimeout(Store._retryTimer);
+        Store._retryTimer = setTimeout(Store.syncToSheets, 5000);
+        return;
+      }
+      Store._remoteSeen = true;
+      // Se compara por CONTENIDO, no por fecha: el estado vacío acababa de nacer, así que
+      // su marca de tiempo era la MÁS nueva. Por eso el backend lo aceptaba y borraba todo.
+      if (Store.hasData(remote)) {
+        const mio = (S.cycleStarts || []).slice();  // lo poco que se haya cargado recién
+        Store.apply(remote);
+        mio.forEach(d => { if (!S.cycleStarts.includes(d)) S.cycleStarts.push(d); });
+        if (typeof normalizeCycleStarts === 'function') normalizeCycleStarts();
+        Store.saveLocal();
+        try { localStorage.removeItem(LS_DIRTY); } catch (e) {}
+        Store._status('ok');
+        if (typeof renderAll === 'function') renderAll();
+        return;
+      }
+    }
+
     Store._syncing = true; Store._queued = false;
     clearTimeout(Store._retryTimer);
     Store._status('saving');
@@ -197,6 +235,7 @@ const Store = {
     let local = null;
     try { local = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) {}
     if (local) Store.apply(local);
+    Store._hadLocal = !!(local && Store.hasData(local));
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
     return local;
   },
@@ -205,6 +244,7 @@ const Store = {
   async syncFromRemote(local) {
     const remote = await Store.loadFromSheets();
     const remoteOk = remote && typeof remote === 'object' && !remote.error && remote.ok !== false;
+    if (remoteOk) Store._remoteSeen = true;        // ya sabemos qué hay del otro lado
     if (!remoteOk) {
       if (Store._dirty()) Store.syncToSheets();
       return false;

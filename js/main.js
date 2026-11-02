@@ -268,15 +268,18 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ev => {
   Object.assign(cur, firstPendingSession());       // arranca en el primer entrenamiento sin hacer
   openWeek = cur.w;
   showView('progress', { noScroll: true });
-  checkFirstRun();
+  // checkFirstRun va DESPUÉS de consultar Sheets: si se abre en un dispositivo nuevo,
+  // preguntar la fecha antes de leer la hoja hacía que guardar esa fecha subiera un
+  // estado vacío y borrara todo lo anterior.
   Store.syncFromRemote(local).then(changed => {    // luego compara con Google Sheets
     if (changed) {
       Object.assign(cur, firstPendingSession());
       if ((lastStart() || S.manualPhase) && $('#fr-date')) closeSheet();
       renderAll();
     }
-    checkPeriodDue();                              // recién acá: Sheets puede traer un período más nuevo
-  }, () => checkPeriodDue());
+    checkFirstRun();                               // recién acá: la hoja puede tener tus datos
+    checkPeriodDue();
+  }, () => { checkFirstRun(); checkPeriodDue(); });
 
   // Si dejás la app abierta varios días, al volver igual avisa
   document.addEventListener('visibilitychange', () => {
